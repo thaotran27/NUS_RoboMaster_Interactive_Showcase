@@ -1,31 +1,69 @@
-.App {
-  text-align: center;
+.main {
+  /*background-image: linear-gradient(to top, white, rgb(200, 200, 200));
+  */
+  background-color: white;
+  height: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.navBar {
+  width: 100vw;
+  height: auto;
+  background-color: lightgrey;
+  border-bottom: 1px solid black;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@media (min-width: 1501px) and (max-width: 1800px) {
+  .App {
+    text-align: center;
+    background-image: radial-gradient(white, rgb(100, 100, 100));
+    color: black;
+    font-size: 14px;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.luminusLogo {
+  width: auto;
+  height: 5vw;
+  padding: 0.5%;
 }
 
-.App-link {
-  color: #61dafb;
+.nusEnginLogo {
+  width: auto;
+  height: 5vw;
+  padding: 0.5%;
+}
+
+.title {
+  position: absolute;
+  width: 400px;
+  left: 50%;
+  margin-left: -200px;
+  font-size: 1vw;
+}
+
+.welcomeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.welcomeBox {
+  width: auto;
+  height: auto;
+  background-color: lightgrey;
+  box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5);
+}
+
+.rmLogo {
+  height: 50vh;
+  width: auto;
 }
 
 @keyframes App-logo-spin {
@@ -36,3 +74,4 @@
     transform: rotate(360deg);
   }
 }
+
