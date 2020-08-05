@@ -3,18 +3,50 @@
   */
   background-color: white;
   height: 100%;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.navBar {
+.nav-bar {
   width: 100vw;
   height: auto;
-  background-color: lightgrey;
-  border-bottom: 1px solid black;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.8);
+  border-bottom: 0.1vh solid black;
+  box-shadow: 0 0.4vh 0.4vh 0 rgba(0, 0, 0, 0.15);
   overflow: hidden;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  z-index: 3;
+  color: lightgray;
+}
+
+.slides {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  z-index: 0;
+  flex: 1;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slides img {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.slide-left {
+  animation: slide-to-left 2s ease-out 1s 1;
+  animation-fill-mode: forwards;
+}
+@keyframes slide-to-left {
+  from {
+    transform: translateX(0);
+  } to {
+    transform: translateX(-100%);
+  }
 }
 
 @media (min-width: 1501px) and (max-width: 1800px) {
@@ -26,43 +58,59 @@
   }
 }
 
-.luminusLogo {
+.luminus-logo {
   width: auto;
   height: 5vw;
   padding: 0.5%;
 }
 
-.nusEnginLogo {
+.nus-engin-logo {
   width: auto;
-  height: 5vw;
+  height: 4vw;
   padding: 0.5%;
 }
 
 .title {
+  width: 100vw;
+  height: auto;
+  padding: 0.5%;
   position: absolute;
-  width: 400px;
-  left: 50%;
-  margin-left: -200px;
-  font-size: 1vw;
-}
-
-.welcomeContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.title h1 {
+  font-size: 2vw;
+}
+
+.welcome-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
   width: 100vw;
-  height: 100vh;
+  z-index: 2;
 }
 
-.welcomeBox {
-  width: auto;
-  height: auto;
-  background-color: lightgrey;
-  box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5);
+.welcome-box {
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);
+  padding: 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70vw;
+  z-index: 2;
+  color: lightgray;
 }
 
-.rmLogo {
-  height: 50vh;
+.welcome-heading {
+  font-size: 2vw;
+}
+
+.rm-logo {
+  height: 20vh;
   width: auto;
 }
 
