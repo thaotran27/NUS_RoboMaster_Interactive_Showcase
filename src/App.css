@@ -1,6 +1,4 @@
 .main {
-  /*background-image: linear-gradient(to top, white, rgb(200, 200, 200));
-  */
   background-color: white;
   height: 100%;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -19,6 +17,32 @@
   position: fixed;
   z-index: 3;
   color: lightgray;
+}
+
+.luminus-logo {
+  width: auto;
+  height: 5vw;
+  padding: 0.5%;
+}
+
+.nus-engin-logo {
+  width: auto;
+  height: 4vw;
+  padding: 0.5%;
+}
+
+.title {
+  width: 100vw;
+  height: auto;
+  padding: 0.5%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title h1 {
+  font-size: 2vw;
 }
 
 .slides {
@@ -49,77 +73,4 @@
   }
 }
 
-@media (min-width: 1501px) and (max-width: 1800px) {
-  .App {
-    text-align: center;
-    background-image: radial-gradient(white, rgb(100, 100, 100));
-    color: black;
-    font-size: 14px;
-  }
-}
-
-.luminus-logo {
-  width: auto;
-  height: 5vw;
-  padding: 0.5%;
-}
-
-.nus-engin-logo {
-  width: auto;
-  height: 4vw;
-  padding: 0.5%;
-}
-
-.title {
-  width: 100vw;
-  height: auto;
-  padding: 0.5%;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.title h1 {
-  font-size: 2vw;
-}
-
-.welcome-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
-  width: 100vw;
-  z-index: 2;
-}
-
-.welcome-box {
-  background-color: rgba(0, 0, 0, 0.8);
-  box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);
-  padding: 2vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 70vw;
-  z-index: 2;
-  color: lightgray;
-}
-
-.welcome-heading {
-  font-size: 2vw;
-}
-
-.rm-logo {
-  height: 20vh;
-  width: auto;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 

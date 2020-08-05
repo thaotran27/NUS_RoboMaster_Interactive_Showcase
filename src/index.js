@@ -12,14 +12,14 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-var sizeShow = document.getElementById("sizeShow");
+/*var sizeShow = document.getElementById("sizeShow");
 console.log(sizeShow);
 sizeShow.innerText = "res: " + window.innerWidth + ", " + window.innerHeight;
 
 window.addEventListener("resize", (event) => {
   sizeShow.innerText = "res: " + window.innerWidth + ", " + window.innerHeight;
   console.log("size changed");
-});
+});*/
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
