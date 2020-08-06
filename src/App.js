@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {BrowserRouter, Link, Route, Switch} from "react-router-dom";
 
 import Home from "./Home.js";
+import GameSelect from "./GameSelect.js";
+import Battle from "./Battle.js";
 
 import './App.css';
 import "./Animations.css";
@@ -16,7 +18,6 @@ class App extends Component {
   constructor() {
     super();
     this.bgImageList = [slide1, slide2, slide3, slide4, slide5];
-    this.home = new Home();
   }
 
   componentDidMount() {
@@ -40,7 +41,9 @@ class App extends Component {
           </div>
 
           <Switch>
-            <Route path="/" component={Home}/>
+            <Route path="/" exact component={() => (<Home text="hello"/>)} />
+            <Route path="/game-select/" exact component={GameSelect}/>
+            <Route path="/game-select/battle" exact component={Battle}/>
           </Switch>
           
         </div>
