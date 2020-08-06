@@ -4,15 +4,43 @@ import {BrowserRouter, Link, Route, Switch, withRouter} from "react-router-dom";
 import "./Home.css";
 import "./Animations.css";
 
+import SignallingServer from "./SignallingInterface.js";
+
 class Home extends Component {
     constructor(props) {
         super(props);
         this.username = null;
+        this.isUsernameValid = true;
     }
 
     componentDidMount() {
-        this.connection = new WebSocket("ws://localhost:3000");
+        /*this.serverConnection = new WebSocket("ws://54.179.2.91:49621");
         this.usernameTextBox = document.getElementById("usernameTextBox");
+
+        this.serverConnection.onmessage = (receivedMessage) => {
+            console.log("Got message from server: ", receivedMessage);
+            var parsedMessage = JSON.parse(receivedMessage.data);
+
+            switch (parsedMessage.type) {
+                case "login":
+                    if (parsedMessage.success) {
+                        this.loginHandler();
+                    } else {
+                        window.alert("Username already in use, please pick a different one!");
+                    }
+                    break;
+                default:
+                    console.log("unknown message for now");
+            }
+        };*/
+        SignallingServer.getInstance().testFunc();
+    }
+
+    loginHandler() {
+        this.props.history.push({
+            pathname: "/game-select",
+            state: { name: this.username }
+        });
     }
 
     parseUsername() {
@@ -22,10 +50,11 @@ class Home extends Component {
             return;
         }
 
-        this.props.history.push({
-            pathname: "/game-select",
-            state: { name: this.username }
-        });
+        var jsonMessage = {
+            type: "login",
+            name: this.username
+        };
+        this.serverConnection.send(JSON.stringify(jsonMessage));
     }
 
     render() {
@@ -47,10 +76,6 @@ class Home extends Component {
                 </div>
             </div>
         );
-    }
-
-    sendToServer(jsonMessage) {
-        
     }
 }
 
