@@ -6,7 +6,9 @@ import { LoginContext } from "./App.js"
 import "./Battle.css";
 import "./Animations.css";
 
-function findFreeRobot(server, peerConnection) {
+var keysPressed = {};
+
+function findFreeRobot(server, peerConnection, dataChannel) {
     server.send(JSON.stringify({
         type: "find-robot",
         joinedGame: "battle"
@@ -16,6 +18,16 @@ function findFreeRobot(server, peerConnection) {
         console.log("Incoming track detected");
         document.getElementById("localRobotFeed").srcObject = event.streams[0];
     });
+
+    window.addEventListener("keydown", function(event) {
+        keysPressed[event.key] = true;
+        dataChannel.send(JSON.stringify(keysPressed));
+    });
+
+    window.addEventListener("keyup", function(event) {
+        delete keysPressed[event.key];
+        dataChannel.send(JSON.stringify(keysPressed));
+    });
 }
 
 function Battle(props) {
@@ -23,6 +35,8 @@ function Battle(props) {
         console.log("User not logged in, heading back to home");
         props.history.push("/");
     }
+
+    console.log(props);
 
     return (
         <div className="window-container">
@@ -32,8 +46,8 @@ function Battle(props) {
 
             <div className="game-container">
                 <h3 align="center">Game</h3>
-                <video id="localRobotFeed" autoplay="true" playsinline="true"></video>
-                <button onClick={() => findFreeRobot(props.server, props.peerConnection)}>Send Offer</button>
+                <video id="localRobotFeed" autoPlay={true} playsInline={true}></video>
+                <button onClick={() => findFreeRobot(props.server, props.peerConnection, props.dataChannel)}>Send Offer</button>
             </div>
 
             <div className="queue-container">

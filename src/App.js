@@ -27,7 +27,7 @@ class App extends Component {
     }
 
     componentWillMount() {
-        this.serverConnection = new WebSocket("ws://localhost:49621");
+        this.serverConnection = new WebSocket("ws://54.179.2.91:49621");
 
         this.rtcConfiguration = {
             "iceServers": [
@@ -37,6 +37,9 @@ class App extends Component {
                 "credential": "RMTurnServer"}] 
         };
         this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfiguration);
+        this.rtcDataChannel = this.rtcPeerConnection.createDataChannel("control_channel", {
+            reliable: true
+        });
 
         // Handle messages from the server.
         this.serverConnection.onmessage = (receivedMessage) => {
@@ -72,9 +75,7 @@ class App extends Component {
                         }
                     }, false);
 
-                    this.rtcDataChannel = this.rtcPeerConnection.createDataChannel("control_channel", {
-                        reliable: true
-                    });
+                    
 
                     this.rtcPeerConnection.ondatachannel = function(event) {
                         event.channel.onerror = function(e) {
@@ -141,7 +142,9 @@ class App extends Component {
                         <Route path="/" exact component={() => (<Home server={this.serverConnection} />)} />
                         <Route path="/game-select/" exact component={() => (<GameSelect server={this.serverConnection}/>)} />
                         <Route path="/game-select/battle" exact component={() => (
-                            <Battle server={this.serverConnection} peerConnection={this.rtcPeerConnection}/>)} />
+                            <Battle server={this.serverConnection} 
+                                    peerConnection={this.rtcPeerConnection}
+                                    dataChannel={this.rtcDataChannel}/>)} />
                         <Route path="/game-select/shooting" exact component={() => (<Shooting server={this.serverConnection}/>)} />
                     </Switch>
 
