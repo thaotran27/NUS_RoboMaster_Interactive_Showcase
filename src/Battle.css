@@ -1,0 +1,46 @@
+.window-container {
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: lightgray;
+}
+
+.help-container {
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);    
+    flex: 1;
+    height: 40vh;
+    z-index: inherit;
+    margin: 0.5%;
+}
+
+.game-container {
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);    
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 60vh;
+    z-index: inherit;
+    margin: 0.5%;
+}
+
+.queue-container {
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);    
+    flex: 1;
+    height: 40vh;
+    z-index: inherit;
+    margin: 0.5%;
+}
+
+.game-container video {
+    background-color: blue;
+    height: 50%;
+    width: 50%;
+}

@@ -21,13 +21,13 @@
 
 .luminus-logo {
   width: auto;
-  height: 5vw;
+  height: 5vh;
   padding: 0.5%;
 }
 
 .nus-engin-logo {
   width: auto;
-  height: 4vw;
+  height: 5vh;
   padding: 0.5%;
 }
 
@@ -39,10 +39,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.title h1 {
-  font-size: 2vw;
 }
 
 .slides {
