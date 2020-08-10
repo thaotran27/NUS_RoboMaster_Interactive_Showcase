@@ -24,7 +24,7 @@ class Home extends Component {
         }
 
         var message = {
-            type: "login",
+            type: "user-login",
             name: this.usernameTextBox.value
         };
         this.props.server.send(JSON.stringify(message));

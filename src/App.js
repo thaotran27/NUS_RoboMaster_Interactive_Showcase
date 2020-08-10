@@ -18,7 +18,7 @@ import slide5 from "./imgs/robot-photo3.jpg";
 class App extends Component {
 
     state = {
-        isLoggedIn: true
+        isLoggedIn: false
     }
 
     constructor(props) {
@@ -27,7 +27,16 @@ class App extends Component {
     }
 
     componentWillMount() {
-        this.serverConnection = new WebSocket("ws://54.179.2.91:49621");
+        this.serverConnection = new WebSocket("ws://localhost:49621");
+
+        this.rtcConfiguration = {
+            "iceServers": [
+                { "url": "stun:stun.1.google.com:19302" },
+                { "url": "turn:54.179.2.91:3478",
+                "username": "RaghavB",
+                "credential": "RMTurnServer"}] 
+        };
+        this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfiguration);
 
         // Handle messages from the server.
         this.serverConnection.onmessage = (receivedMessage) => {
@@ -35,7 +44,9 @@ class App extends Component {
             var parsedMessage = JSON.parse(receivedMessage.data);
 
             switch (parsedMessage.type) {
+                
                 case "login":
+                    console.log("User attempting to login...");
                     if (parsedMessage.success) {
                         this.state.isLoggedIn = true;
                         this.props.history.push("/game-select");
@@ -43,6 +54,61 @@ class App extends Component {
                         window.alert("Username already in use, please pick a different one!");
                     }
                     break;
+
+
+                case "request-offer": 
+                    var rtcPtr = this.rtcPeerConnection;
+                    var serverPtr = this.serverConnection;
+
+                    this.rtcPeerConnection.addEventListener("icegatheringstatechange", function() {                        
+                        if (rtcPtr.iceGatheringState === "complete") {
+                            console.log("Sending offer to robot: " + parsedMessage.robotName);
+                            serverPtr.send(JSON.stringify({
+                                type: "offer",
+                                name: parsedMessage.robotName,
+                                offer: rtcPtr.localDescription.sdp
+                            }));
+                            console.log(rtcPtr);
+                        }
+                    }, false);
+
+                    this.rtcDataChannel = this.rtcPeerConnection.createDataChannel("control_channel", {
+                        reliable: true
+                    });
+
+                    this.rtcPeerConnection.ondatachannel = function(event) {
+                        event.channel.onerror = function(e) {
+                            console.log("Data channel error: ", e);
+                        };
+                        event.channel.onmessage = function(e) {
+                            console.log("Data received: ", e.data);
+                        }
+                    };
+
+                    rtcPtr.createOffer(function(sessionDescription) {
+                        rtcPtr.setLocalDescription(sessionDescription);
+                    }, function(error) {
+                        window.alert(error);
+                    }, {
+                        "mandatory": {
+                            "OfferToReceiveAudio": false,
+                            "OfferToReceiveVideo": true
+                        }
+                    });
+                    break;
+
+
+                case "put-in-queue":
+                    break;
+
+                
+                case "answer":
+                    this.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
+                    console.log("Received answer: " + parsedMessage.answer);
+                    break;
+
+                case "update-queue":
+
 
                 default:
                     console.log("unknown message for now");
@@ -74,8 +140,9 @@ class App extends Component {
                     <Switch>
                         <Route path="/" exact component={() => (<Home server={this.serverConnection} />)} />
                         <Route path="/game-select/" exact component={() => (<GameSelect server={this.serverConnection}/>)} />
-                        <Route path="/game-select/battle" exact component={() => (<Battle server={this.serverConnection}/>)} />
-                        <Route path="/game-select/aiming" exact component={() => (<Shooting server={this.serverConnection}/>)} />
+                        <Route path="/game-select/battle" exact component={() => (
+                            <Battle server={this.serverConnection} peerConnection={this.rtcPeerConnection}/>)} />
+                        <Route path="/game-select/shooting" exact component={() => (<Shooting server={this.serverConnection}/>)} />
                     </Switch>
 
                 </div>

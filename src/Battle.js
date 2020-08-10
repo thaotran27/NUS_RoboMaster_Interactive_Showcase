@@ -1,13 +1,21 @@
 import React, { useContext } from 'react';
-import {BrowserRouter, Link, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Link, Route, Switch, withRouter} from "react-router-dom";
 
 import { LoginContext } from "./App.js"
 
 import "./Battle.css";
 import "./Animations.css";
 
-function getFreeRobot() {
+function findFreeRobot(server, peerConnection) {
+    server.send(JSON.stringify({
+        type: "find-robot",
+        joinedGame: "battle"
+    }));
 
+    peerConnection.addEventListener("track", function(event) {
+        console.log("Incoming track detected");
+        document.getElementById("localRobotFeed").srcObject = event.streams[0];
+    });
 }
 
 function Battle(props) {
@@ -24,7 +32,8 @@ function Battle(props) {
 
             <div className="game-container">
                 <h3 align="center">Game</h3>
-                <video></video>
+                <video id="localRobotFeed" autoplay="true" playsinline="true"></video>
+                <button onClick={() => findFreeRobot(props.server, props.peerConnection)}>Send Offer</button>
             </div>
 
             <div className="queue-container">
@@ -35,4 +44,4 @@ function Battle(props) {
 
 }
 
-export default Battle;
+export default withRouter(Battle);
