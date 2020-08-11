@@ -15,6 +15,31 @@ import slide3 from "./imgs/arena-2018.jpg";
 import slide4 from "./imgs/robot-engineer.jpg";
 import slide5 from "./imgs/robot-photo3.jpg";
 
+window.initializePeerConnection = function() {
+    window.rtcConfiguration = {
+        "iceServers": [
+            { "url": "stun:stun.1.google.com:19302" },
+            { "url": "turn:54.179.2.91:3478",
+            "username": "RaghavB",
+            "credential": "RMTurnServer"}] 
+    };
+    window.rtcPeerConnection = new RTCPeerConnection(window.rtcConfiguration);
+    window.rtcDataChannel = window.rtcPeerConnection.createDataChannel("control_channel", {
+        reliable: true
+    });
+    console.log("Peer connection initialized");
+}
+
+window.closePeerConnection = function() {
+    window.serverConnection.send(JSON.stringify({
+        type: "leave",
+        leaveType: "browser_back"
+    }));
+    window.rtcDataChannel.close();
+    window.rtcPeerConnection.close();
+    console.log("Peer connection ended");
+}
+
 class App extends Component {
 
     state = {
@@ -27,18 +52,22 @@ class App extends Component {
     }
 
     componentWillMount() {
-        this.serverConnection = new WebSocket("ws://localhost:49621");
-        this.initializePeerConnection();
-        
+        window.serverConnection = new WebSocket("ws://54.179.2.91:49621");
+
+        this.props.history.listen(function(location, action) {
+            if (location.pathname === "/game-select" && action === "POP") {
+                window.closePeerConnection();
+            }
+        });
+
         // Handle messages from the server.
-        this.serverConnection.onmessage = (receivedMessage) => {
+        window.serverConnection.onmessage = (receivedMessage) => {
             console.log("Got message from server: ", receivedMessage);
             var parsedMessage = JSON.parse(receivedMessage.data);
 
             switch (parsedMessage.type) {
                 
                 case "login":
-                    console.log("User attempting to login...");
                     if (parsedMessage.success) {
                         this.state.isLoggedIn = true;
 
@@ -50,22 +79,27 @@ class App extends Component {
 
 
                 case "request-offer": 
-                    var rtcPtr = this.rtcPeerConnection;
-                    var serverPtr = this.serverConnection;
+                    console.log("User requested offer");
+                    
+                    window.initializePeerConnection();
 
-                    this.rtcPeerConnection.addEventListener("icegatheringstatechange", function() {                        
-                        if (rtcPtr.iceGatheringState === "complete") {
+                    window.rtcPeerConnection.addEventListener("icegatheringstatechange", function() {                        
+                        if (window.rtcPeerConnection.iceGatheringState === "complete") {
                             console.log("Sending offer to robot: " + parsedMessage.robotName);
-                            serverPtr.send(JSON.stringify({
+                            window.serverConnection.send(JSON.stringify({
                                 type: "offer",
                                 name: parsedMessage.robotName,
-                                offer: rtcPtr.localDescription.sdp
+                                offer: window.rtcPeerConnection.localDescription.sdp
                             }));
-                            console.log(rtcPtr);
                         }
                     }, false);
+                    
+                    window.rtcPeerConnection.addEventListener("track", function(event) {
+                        console.log("Incoming track detected");
+                        document.getElementById("localRobotFeed").srcObject = event.streams[0];
+                    });
 
-                    this.rtcPeerConnection.ondatachannel = function(event) {
+                    window.rtcPeerConnection.ondatachannel = function(event) {
                         event.channel.onerror = function(e) {
                             console.log("Data channel error: ", e);
                         };
@@ -74,8 +108,8 @@ class App extends Component {
                         }
                     };
 
-                    rtcPtr.createOffer(function(sessionDescription) {
-                        rtcPtr.setLocalDescription(sessionDescription);
+                    window.rtcPeerConnection.createOffer(function(sessionDescription) {
+                        window.rtcPeerConnection.setLocalDescription(sessionDescription);
                     }, function(error) {
                         window.alert(error);
                     }, {
@@ -92,8 +126,8 @@ class App extends Component {
 
 
                 case "answer":
-                    this.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
-                    console.log("Received answer: " + parsedMessage.answer);
+                    window.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
+                    console.log("Received answer: " + parsedMessage.answer.answer);
                     break;
 
 
@@ -104,9 +138,8 @@ class App extends Component {
                 case "leave":
                     console.log("Closing RTCPeerConnection to robot " + parsedMessage.name);
                     window.alert("Sorry, the robot has disconnected, please select a game again.");
-                    this.rtcDataChannel.close();
-                    this.rtcPeerConnection.close();
-                    this.initializePeerConnection();
+                    
+                    window.closePeerConnection();
 
                     this.props.history.push("/game-select");
                     break;
@@ -118,22 +151,8 @@ class App extends Component {
         };
     }
 
-    initializePeerConnection() {
-        this.rtcConfiguration = {
-            "iceServers": [
-                { "url": "stun:stun.1.google.com:19302" },
-                { "url": "turn:54.179.2.91:3478",
-                "username": "RaghavB",
-                "credential": "RMTurnServer"}] 
-        };
-        this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfiguration);
-        this.rtcDataChannel = this.rtcPeerConnection.createDataChannel("control_channel", {
-            reliable: true
-        });
-    }
-
     sendToServer(jsonObject) {
-        this.serverConnection.send(JSON.stringify(jsonObject));
+        window.serverConnection.send(JSON.stringify(jsonObject));
     }
 
     render() {
@@ -156,10 +175,7 @@ class App extends Component {
                     <Switch>
                         <Route path="/" exact component={() => (<Home server={this.serverConnection} />)} />
                         <Route path="/game-select/" exact component={() => (<GameSelect server={this.serverConnection}/>)} />
-                        <Route path="/game-select/battle" exact component={() => (
-                            <Battle server={this.serverConnection} 
-                                    peerConnection={this.rtcPeerConnection}
-                                    dataChannel={this.rtcDataChannel}/>)} />
+                        <Route path="/game-select/battle" exact component={() => (<Battle server={this.serverConnection}/>)} />
                         <Route path="/game-select/shooting" exact component={() => (<Shooting server={this.serverConnection}/>)} />
                     </Switch>
 

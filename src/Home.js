@@ -27,7 +27,7 @@ class Home extends Component {
             type: "user-login",
             name: this.usernameTextBox.value
         };
-        this.props.server.send(JSON.stringify(message));
+        window.serverConnection.send(JSON.stringify(message));
     }
 
     render() {
