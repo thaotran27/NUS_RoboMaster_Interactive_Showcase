@@ -27,20 +27,9 @@ class App extends Component {
     }
 
     componentWillMount() {
-        this.serverConnection = new WebSocket("ws://54.179.2.91:49621");
-
-        this.rtcConfiguration = {
-            "iceServers": [
-                { "url": "stun:stun.1.google.com:19302" },
-                { "url": "turn:54.179.2.91:3478",
-                "username": "RaghavB",
-                "credential": "RMTurnServer"}] 
-        };
-        this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfiguration);
-        this.rtcDataChannel = this.rtcPeerConnection.createDataChannel("control_channel", {
-            reliable: true
-        });
-
+        this.serverConnection = new WebSocket("ws://localhost:49621");
+        this.initializePeerConnection();
+        
         // Handle messages from the server.
         this.serverConnection.onmessage = (receivedMessage) => {
             console.log("Got message from server: ", receivedMessage);
@@ -52,6 +41,7 @@ class App extends Component {
                     console.log("User attempting to login...");
                     if (parsedMessage.success) {
                         this.state.isLoggedIn = true;
+
                         this.props.history.push("/game-select");
                     } else {
                         window.alert("Username already in use, please pick a different one!");
@@ -74,8 +64,6 @@ class App extends Component {
                             console.log(rtcPtr);
                         }
                     }, false);
-
-                    
 
                     this.rtcPeerConnection.ondatachannel = function(event) {
                         event.channel.onerror = function(e) {
@@ -102,19 +90,46 @@ class App extends Component {
                 case "put-in-queue":
                     break;
 
-                
+
                 case "answer":
                     this.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
                     console.log("Received answer: " + parsedMessage.answer);
                     break;
 
+
                 case "update-queue":
+                    break;    
+                
+
+                case "leave":
+                    console.log("Closing RTCPeerConnection to robot " + parsedMessage.name);
+                    window.alert("Sorry, the robot has disconnected, please select a game again.");
+                    this.rtcDataChannel.close();
+                    this.rtcPeerConnection.close();
+                    this.initializePeerConnection();
+
+                    this.props.history.push("/game-select");
+                    break;
 
 
                 default:
                     console.log("unknown message for now");
             }
         };
+    }
+
+    initializePeerConnection() {
+        this.rtcConfiguration = {
+            "iceServers": [
+                { "url": "stun:stun.1.google.com:19302" },
+                { "url": "turn:54.179.2.91:3478",
+                "username": "RaghavB",
+                "credential": "RMTurnServer"}] 
+        };
+        this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfiguration);
+        this.rtcDataChannel = this.rtcPeerConnection.createDataChannel("control_channel", {
+            reliable: true
+        });
     }
 
     sendToServer(jsonObject) {

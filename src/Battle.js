@@ -8,25 +8,44 @@ import "./Animations.css";
 
 var keysPressed = {};
 
-function findFreeRobot(server, peerConnection, dataChannel) {
-    server.send(JSON.stringify({
+function findFreeRobot(props) {
+    props.server.send(JSON.stringify({
         type: "find-robot",
         joinedGame: "battle"
     }));
 
-    peerConnection.addEventListener("track", function(event) {
+    props.peerConnection.addEventListener("track", function(event) {
         console.log("Incoming track detected");
         document.getElementById("localRobotFeed").srcObject = event.streams[0];
     });
 
     window.addEventListener("keydown", function(event) {
+        if (props.location.pathname !== "/game-select/battle") {
+            return;
+        }
         keysPressed[event.key] = true;
-        dataChannel.send(JSON.stringify(keysPressed));
+        console.log(keysPressed);
+        try {
+            props.dataChannel.send(JSON.stringify(keysPressed));
+        } catch (e) {
+            //console.log(e);
+            // Silent exception handling lmao
+        }
     });
 
     window.addEventListener("keyup", function(event) {
+        console.log(props.location.pathname);
+        if (props.location.pathname !== "/game-select/battle") {
+            return;
+        }
         delete keysPressed[event.key];
-        dataChannel.send(JSON.stringify(keysPressed));
+        console.log(keysPressed);
+        try {
+            props.dataChannel.send(JSON.stringify(keysPressed));
+        } catch (e) {
+            //console.log(e);
+            // Silent exception handling lmao
+        }
     });
 }
 
@@ -47,7 +66,7 @@ function Battle(props) {
             <div className="game-container">
                 <h3 align="center">Game</h3>
                 <video id="localRobotFeed" autoPlay={true} playsInline={true}></video>
-                <button onClick={() => findFreeRobot(props.server, props.peerConnection, props.dataChannel)}>Send Offer</button>
+                <button onClick={() => findFreeRobot(props)}>Send Offer</button>
             </div>
 
             <div className="queue-container">
