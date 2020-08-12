@@ -10,7 +10,7 @@
 }
 
 .selection-box {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.95);
     box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);    
     z-index: inherit;
     display: flex;

@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import {BrowserRouter, Link, Route, Switch, withRouter} from "react-router-dom";
+import React, { useContext, useState, useEffect } from 'react';
+import { withRouter } from "react-router-dom";
 
-import { LoginContext } from "./App.js"
+import { GlobalVals } from "./App.js"
 import KeyboardController from "./KeyboardController.js"
 
 
@@ -10,20 +10,14 @@ import "./Animations.css";
 
 var keyboardController;
 
-var queueItems = ["raghav", "vedant", "test","vedant", "test", "raghav", "vedant", "test", "raghav", "vedant", "test",
-"raghav", "vedant", "test","raghav", "vedant", "test","raghav", "vedant", "test","raghav", "vedant", "test","raghav", "vedant", "test"];
-
 function Battle(props) {
-    if (useContext(LoginContext) === false) {
+    const [userQueue, setThing] = useState(useContext(GlobalVals).userBattleQueue);
+
+    if (useContext(GlobalVals).isLoggedIn === false) {
         console.log("User not logged in, heading back to home");
         props.history.push("/");
         return <div></div>;
     }
-
-    /*window.serverConnection.send(JSON.stringify({
-        type: "find-robot",
-        joinedGame: "battle"
-    }));*/
 
     keyboardController = new KeyboardController();
 
@@ -45,8 +39,8 @@ function Battle(props) {
                 <h3 align="center">Waiting Queue</h3>
                 <hr/>
                 <div className="queue-scroll-container">
-                    {queueItems.map((item) => (
-                        <span>{item}</span>
+                    {userQueue.map((name) => (
+                        <span key={userQueue.indexOf(name)+1}>{userQueue.indexOf(name)+1}. {name}</span>
                     ))}
                 </div>
             </div>

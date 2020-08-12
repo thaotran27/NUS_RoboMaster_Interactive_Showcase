@@ -43,7 +43,9 @@ window.closePeerConnection = function() {
 class App extends Component {
 
     state = {
-        isLoggedIn: true
+        isLoggedIn: false,
+        userBattleQueue: [],
+        userShootingQueue: []
     }
 
     constructor(props) {
@@ -52,7 +54,7 @@ class App extends Component {
     }
 
     componentWillMount() {
-        window.serverConnection = new WebSocket("ws://54.179.2.91:49621");
+        window.serverConnection = new WebSocket("ws://localhost:49621");
 
         this.props.history.listen(function(location, action) {
             if (location.pathname === "/game-select" && action === "POP") {
@@ -69,9 +71,14 @@ class App extends Component {
                 
                 case "login":
                     if (parsedMessage.success) {
-                        this.state.isLoggedIn = true;
+                        this.setState({isLoggedIn: true});
 
                         this.props.history.push("/game-select");
+
+                        window.serverConnection.send(JSON.stringify({
+                            type: "find-robot",
+                            joinedGame: "battle"
+                        }));
                     } else {
                         window.alert("Username already in use, please pick a different one!");
                     }
@@ -121,10 +128,6 @@ class App extends Component {
                     break;
 
 
-                case "put-in-queue":
-                    break;
-
-
                 case "answer":
                     window.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
                     console.log("Received answer: " + parsedMessage.answer.answer);
@@ -132,6 +135,13 @@ class App extends Component {
 
 
                 case "update-queue":
+                    if (parsedMessage.game === "battle") {
+                        this.setState({userBattleQueue: parsedMessage.updatedQueue});
+                        //state.userBattleQueue = parsedMessage.updatedQueue;
+                    } else {
+                        this.setState({userShootingQueue: parsedMessage.updatedQueue});
+///                        this.state.userShootingQueue = parsedMessage.updatedQueue;
+                    }
                     break;    
                 
 
@@ -157,7 +167,7 @@ class App extends Component {
 
     render() {
         return (
-            <LoginContext.Provider value={this.state.isLoggedIn}>
+            <GlobalVals.Provider value={this.state}>
                 <div className="main">
                             
                     <div className="nav-bar init-top">
@@ -175,16 +185,16 @@ class App extends Component {
                     <Switch>
                         <Route path="/" exact component={() => (<Home server={this.serverConnection} />)} />
                         <Route path="/game-select/" exact component={() => (<GameSelect server={this.serverConnection}/>)} />
-                        <Route path="/game-select/battle" exact component={() => (<Battle server={this.serverConnection}/>)} />
-                        <Route path="/game-select/shooting" exact component={() => (<Shooting server={this.serverConnection}/>)} />
+                        <Route path="/game-select/battle" exact component={() => (<Battle placeholder={""}/>)} />
+                        <Route path="/game-select/shooting" exact component={() => (<Shooting placeholder={""}/>)} />
                     </Switch>
 
                 </div>
-            </LoginContext.Provider>
+            </GlobalVals.Provider>
 
         );
     }
 }
 
-export const LoginContext = React.createContext();
+export const GlobalVals = React.createContext();
 export default withRouter(App);

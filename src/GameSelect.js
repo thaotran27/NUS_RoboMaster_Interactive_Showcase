@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { withRouter, Link } from 'react-router-dom'
 
-import { LoginContext } from "./App.js";
+import { GlobalVals } from "./App.js";
 
 import "./GameSelect.css";
 import "./Animations.css";
 
 function GameSelect(props) {
-    if (useContext(LoginContext) === false) {
+    if (useContext(GlobalVals).isLoggedIn === false) {
         console.log("User not logged in, heading back to home");
         props.history.push("/");
     }

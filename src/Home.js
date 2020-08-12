@@ -28,9 +28,10 @@ class Home extends Component {
             return;
         }
 
+        window.username = this.usernameTextBox.value;
         var message = {
             type: "user-login",
-            name: this.usernameTextBox.value
+            name: window.username
         };
         window.serverConnection.send(JSON.stringify(message));
     }
@@ -44,10 +45,10 @@ class Home extends Component {
                     <h2 align="center">Welcome to Team LumiNUS's Interactive Robot Showcase!</h2>
                     <p align="center">
                         Get ready to experience the exciting gameplay elements of the RoboMaster competition 
-                        through by controlling our robots live from the comfort of your home!
+                        by controlling our robots live from the comfort of your home!
                     </p>
-                    <p>Please enter a username below to begin :)</p>
-                    
+                    <p>Please enter your nickname below to begin :)</p>
+                    <br/>
                     <div className="usernameEntry">
                         <input id="usernameTextBox" type="text" placeholder="Enter a username..."></input>
                         <button onClick={this.startButtonHandler.bind(this)}>Start!</button>
