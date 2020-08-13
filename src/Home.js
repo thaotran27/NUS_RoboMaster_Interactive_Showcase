@@ -44,13 +44,13 @@ class Home extends Component {
                     <img src={require("./imgs/rm_logo.png")} className="rm-logo" alt="robomaster logo"/>
                     <h2 align="center">Welcome to Team LumiNUS's Interactive Robot Showcase!</h2>
                     <p align="center">
-                        Get ready to experience the exciting gameplay elements of the RoboMaster competition 
+                        Get ready to experience the exciting gameplay elements of the RoboMaster competition <br/>
                         by controlling our robots live from the comfort of your home!
                     </p>
                     <p>Please enter your nickname below to begin :)</p>
                     <br/>
                     <div className="usernameEntry">
-                        <input id="usernameTextBox" type="text" placeholder="Enter a username..."></input>
+                        <input id="usernameTextBox" type="text" placeholder="Enter any nickname..."></input>
                         <button onClick={this.startButtonHandler.bind(this)}>Start!</button>
                     </div>
                 </div>

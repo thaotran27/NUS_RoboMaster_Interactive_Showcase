@@ -3,9 +3,10 @@
     height: 100vh;
     z-index: 2;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     color: lightgray;
+    overflow: hidden;
 }
 
 .help-container {
@@ -32,6 +33,11 @@
     height: auto;
     z-index: inherit;
     margin: 0.5%;
+}
+
+.seconds {
+    font-size: xx-large;
+    margin-bottom: 2%;
 }
 
 .queue-container {

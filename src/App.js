@@ -30,13 +30,22 @@ window.initializePeerConnection = function() {
     console.log("Peer connection initialized");
 }
 
+var myTimer;
+var countdownVal = 40;
+
 window.closePeerConnection = function() {
+    clearTimeout(myTimer);
+    countdownVal = 40;
     window.serverConnection.send(JSON.stringify({
         type: "leave",
         leaveType: "browser_back"
     }));
-    window.rtcDataChannel.close();
-    window.rtcPeerConnection.close();
+    try {
+        window.rtcDataChannel.close();
+        window.rtcPeerConnection.close();
+    } catch (e) {
+        console.log("Peer connection was not yet initialized");
+    }
     console.log("Peer connection ended");
 }
 
@@ -72,21 +81,14 @@ class App extends Component {
                 case "login":
                     if (parsedMessage.success) {
                         this.setState({isLoggedIn: true});
-
                         this.props.history.push("/game-select");
-
-                        window.serverConnection.send(JSON.stringify({
-                            type: "find-robot",
-                            joinedGame: "battle"
-                        }));
                     } else {
                         window.alert("Username already in use, please pick a different one!");
                     }
                     break;
 
-
                 case "request-offer": 
-                    console.log("User requested offer");
+                    console.log("Robot requested offer from user");
                     
                     window.initializePeerConnection();
 
@@ -103,7 +105,8 @@ class App extends Component {
                     
                     window.rtcPeerConnection.addEventListener("track", function(event) {
                         console.log("Incoming track detected");
-                        document.getElementById("localRobotFeed").srcObject = event.streams[0];
+                        window.myStream = event.streams[0];
+                        document.getElementById("localRobotFeed").srcObject = window.myStream;
                     });
 
                     window.rtcPeerConnection.ondatachannel = function(event) {
@@ -130,26 +133,31 @@ class App extends Component {
 
                 case "answer":
                     window.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
+                    tickTimer(false, this.props);
                     console.log("Received answer: " + parsedMessage.answer.answer);
                     break;
 
 
                 case "update-queue":
                     if (parsedMessage.game === "battle") {
+                        console.log(parsedMessage.updatedQueue);
                         this.setState({userBattleQueue: parsedMessage.updatedQueue});
-                        //state.userBattleQueue = parsedMessage.updatedQueue;
                     } else {
                         this.setState({userShootingQueue: parsedMessage.updatedQueue});
-///                        this.state.userShootingQueue = parsedMessage.updatedQueue;
+                    }
+                    if (window.rtcPeerConnection == null) {
+                        break;
+                    }
+                    if (window.rtcPeerConnection.connectionState === "connected") {
+                        document.getElementById("localRobotFeed").srcObject = window.myStream;
                     }
                     break;    
                 
 
                 case "leave":
+                    window.closePeerConnection();
                     console.log("Closing RTCPeerConnection to robot " + parsedMessage.name);
                     window.alert("Sorry, the robot has disconnected, please select a game again.");
-                    
-                    window.closePeerConnection();
 
                     this.props.history.push("/game-select");
                     break;
@@ -194,6 +202,32 @@ class App extends Component {
 
         );
     }
+}
+
+function tickTimer(startCountdown, props) {
+    var timer = document.getElementById("time");
+    
+    try {
+        if (countdownVal === 0) {
+            timer.innerHTML = "-";
+            //window.alert("Your turn has ended, please select a game again to continue :)");
+            window.closePeerConnection();
+            props.history.push("/game-select");
+            return;
+        }
+
+        if (startCountdown === false) {
+            countdownVal = 40;
+            timer.innerHTML = countdownVal;
+        } else {
+            countdownVal -= 1;
+            timer.innerHTML = countdownVal;
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+    myTimer = setTimeout(() => tickTimer(true, props), 1000);
 }
 
 export const GlobalVals = React.createContext();
