@@ -248,7 +248,7 @@ class App extends Component {
     // This will re-render the ENTIRE website for all users if it is called. 
     // For a start, I do not want to re-render while the user is in a game, they couldn't care less about the queue anyways.
     updateQueueHandler(parsedMessage) {
-        if (parsedMessage.instruction === "normal-message") {
+        if (parsedMessage.instruction === "normal-update") {
             // We do not update here if the RTC peer connection object is in the connected state.
             if (window.rtcPeerConnection == null) {
                 // Continue with update if there is no window.rtcPeerConnection. This just means user is in queue
@@ -271,9 +271,9 @@ class App extends Component {
             console.error("Queue received for unknown game: " + parsedMessage.game);
         }
 
-        if (parsedMessage.instruction === "start-game") {
-            document.getElementById("localRobotFeed").srcObject = window.myStream;
-        }
+        //if (parsedMessage.instruction === "start-game") {
+        //    document.getElementById("localRobotFeed").srcObject = window.myStream;
+        //}
     }
 }
 
