@@ -77,7 +77,7 @@ function tickTimer(startCountdown, props) {
     try {
         if (countdownVal === 0) {
             timer.innerHTML = "-";
-            window.closePeerConnection();
+            window.closePeerConnection("end-game");
             props.history.push("/game-select");
             return;
         }
@@ -117,8 +117,12 @@ class App extends Component {
 
         this.props.history.listen(function (location, action) {
             if (location.pathname === "/game-select" && action === "POP") {
+                // Do not delete user connection object from server in this case.
+                // Only remove references to the robot and back, and remove from queues.
                 window.closePeerConnection("browser-back");
             } else if (location.pathname === "/" && action === "POP") {
+                // Going back to home screen means that user needs to perform login from
+                // scratch. Delete connection object, remove from queues.
                 window.closePeerConnection("hard-exit");
             }
         });
@@ -146,7 +150,7 @@ class App extends Component {
                     break;
 
                 case "leave":
-                    window.closePeerConnection();
+                    window.closePeerConnection("browser-back");
                     console.log("Closing RTCPeerConnection to robot " + parsedMessage.name);
                     window.alert("Sorry, the robot has disconnected, please select a game again.");
                     this.props.history.push("/game-select");
