@@ -72,15 +72,16 @@ function KeyboardController() {
             delete timers[key];
         }
     };
+    */
 
     // When window is unfocused we may not get key events. To prevent this
     // causing a key to 'get stuck down', cancel all held keys
-    window.onblur= function() {
+    window.onblur = function() {
         for (var key in timers)
-            if (timers[key]!==null)
+            if (timers[key] !== null)
                 clearInterval(timers[key]);
         timers= {};
-    };*/
+    };
 };
 
 export default KeyboardController;

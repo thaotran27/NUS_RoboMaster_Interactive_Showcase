@@ -48,6 +48,9 @@ window.closePeerConnection = function () {
     }));
 
     try {
+        document.onkeydown = null;
+        document.onkeyup = null;
+        window.rtcDataChannel.send(JSON.stringify({}));
         window.rtcDataChannel.close();
         window.rtcPeerConnection.close();
         console.log("Peer connection ended");
@@ -104,7 +107,7 @@ class App extends Component {
     }
 
     componentWillMount() {
-        window.serverConnection = new WebSocket("ws://localhost:49621");
+        window.serverConnection = new WebSocket("ws://54.179.2.91:49621");
 
         this.props.history.listen(function (location, action) {
             if (location.pathname === "/game-select" && action === "POP") {
