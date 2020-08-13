@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { withRouter } from "react-router-dom";
 
-import { GlobalVals } from "./App.js"
+import { GlobalVals }  from "./GlobalVals.js"
 import KeyboardController from "./KeyboardController.js"
 import WaitingQueue from "./WaitingQueue.js"
 
@@ -28,7 +28,7 @@ function Battle(props) {
             </div>
 
             <div className="game-container">
-                <h3 align="center">Game</h3>
+                <h3 align="center">1v1 Battle</h3>
                 <hr/>
                 <video id="localRobotFeed" autoPlay={true} playsInline={true}></video>
                 <span>Time Left: </span><span id="time" className="seconds">-</span>

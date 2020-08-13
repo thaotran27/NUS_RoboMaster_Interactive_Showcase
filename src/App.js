@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter } from "react-router-dom";
 
+import Notification from "./Notification";
 import Home from "./Home.js";
 import GameSelect from "./GameSelect.js";
 import Battle from "./Battle.js";
 import Shooting from "./Shooting.js";
+import { GlobalVals } from "./GlobalVals.js";
 
 import './App.css';
 import "./Animations.css";
@@ -48,10 +50,14 @@ window.closePeerConnection = function () {
     try {
         window.rtcDataChannel.close();
         window.rtcPeerConnection.close();
+        console.log("Peer connection ended");
+        window.appComponent.setState({
+            notificationMessage: 
+            "Your turn has ended, please select a game again if you wish to continue :)"
+        });
     } catch (e) {
-        console.warning("Peer connection was not yet initialized");
+        console.warn("Peer connection was not yet initialized");
     }
-    console.log("Peer connection ended");
 }
 
 
@@ -63,7 +69,6 @@ function tickTimer(startCountdown, props) {
     try {
         if (countdownVal === 0) {
             timer.innerHTML = "-";
-            //window.alert("Your turn has ended, please select a game again to continue :)");
             window.closePeerConnection();
             props.history.push("/game-select");
             return;
@@ -88,12 +93,14 @@ class App extends Component {
     state = {
         isLoggedIn: false,
         userBattleQueue: [],
-        userShootingQueue: []
+        userShootingQueue: [],
+        notificationMessage: ""
     }
 
     constructor(props) {
         super(props);
         this.bgImageList = [slide1, slide2, slide3, slide4, slide5];
+        window.appComponent = this;
     }
 
     componentWillMount() {
@@ -146,6 +153,8 @@ class App extends Component {
             <GlobalVals.Provider value={this.state}>
                 <div className="main">
 
+                    <Notification></Notification>
+
                     <div className="nav-bar init-top">
                         <img src={require("./imgs/luminus_logo2.png")} className="luminus-logo" alt="team luminus logo" />
                         <div className="title">
@@ -176,7 +185,7 @@ class App extends Component {
 
     loginHandler(parsedMessage) {
         if (parsedMessage.success) {
-            this.setState({ isLoggedIn: true });
+            this.setState({ isLoggedIn: true, notificationMessage: "Successfully logged in!" });
             this.props.history.push("/game-select");
         } else {
             window.alert("Username already in use, please pick a different one!");
@@ -230,9 +239,9 @@ class App extends Component {
         window.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
         tickTimer(false, this.props);
         console.log("Received answer: " + parsedMessage.answer.answer);
-
+        this.setState({notificationMessage: "Game started!"});
         this.sendToServer({
-            type: "user-state-game"
+            type: "user-start-game"
         });
     }
 
@@ -262,12 +271,10 @@ class App extends Component {
             console.error("Queue received for unknown game: " + parsedMessage.game);
         }
 
-        // 
         if (parsedMessage.instruction === "start-game") {
             document.getElementById("localRobotFeed").srcObject = window.myStream;
         }
     }
 }
 
-export const GlobalVals = React.createContext();
 export default withRouter(App);

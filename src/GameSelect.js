@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { withRouter, Link } from 'react-router-dom'
 
-import { GlobalVals } from "./App.js";
+import { GlobalVals }  from "./GlobalVals.js";
 
 import "./GameSelect.css";
 import "./Animations.css";
 
 function goToBattle() {
+    window.appComponent.setState({notificationMessage: "Joining 1v1 battle game..."});
     window.serverConnection.send(JSON.stringify({
         type: "find-robot",
         joinedGame: "battle"
@@ -14,6 +15,7 @@ function goToBattle() {
 }
 
 function goToShooting() {
+    window.appComponent.setState({notificationMessage: "Joining shooting game..."});
     window.serverConnection.send(JSON.stringify({
         type: "find-robot",
         joinedGame: "shooting"
@@ -41,7 +43,7 @@ function GameSelect(props) {
                     </div>
 
                     <div className="image-container">
-                        <Link to="game-select/shooting">
+                        <Link to="game-select/shooting" onClick={() => goToShooting()}>
                             <img src={require("./imgs/shooting_image.PNG")} alt="Shooting Selection"/>
                         </Link>
                         <h3 align="center" className="image-para">Shooting</h3>

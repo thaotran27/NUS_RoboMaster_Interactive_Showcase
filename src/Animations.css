@@ -10,7 +10,13 @@
 }
 
 .init-left {
-    animation: slide-in-from-left 1s ease-out 0s 1;
+    animation: slide-in-from-left 1s ease-out 0s 1 forwards;
+}
+.init-left-2x {
+    animation: slide-in-from-left 0.3s ease-out 0s 1 forwards;
+}
+.exit-left-2x {
+    animation: slide-out-to-right 0.3s ease-out 0s 1 forwards;
 }
 @keyframes slide-in-from-left {
     from {
@@ -19,6 +25,15 @@
     } to {
         opacity: 1;
         transform: translateX(0%);
+    }
+}
+@keyframes slide-out-to-right {
+    from {
+        opacity: 1;
+        transform: translateX(0%);
+    } to {
+        opacity: 0;
+        transform: translateX(-50%);
     }
 }
 
@@ -36,7 +51,7 @@
 }
 
 .init-top {
-    animation: slide-in-from-top 1s ease-out 0s 1;
+    animation: slide-in-from-top 1s ease-out 0s 1 forwards;
 }
 @keyframes slide-in-from-top {
     from {
@@ -49,7 +64,7 @@
 }
 
 .init-bottom {
-    animation: slide-in-from-bottom 1s ease-out 0s 1;
+    animation: slide-in-from-bottom 1s ease-out 0s 1 forwards;
 }
 @keyframes slide-in-from-bottom {
     from {

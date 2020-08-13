@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { withRouter } from "react-router-dom";
+import React, { useContext } from 'react';
 
-import { GlobalVals } from "./App.js"
+import { GlobalVals }  from "./GlobalVals.js"
 
 import "./Battle.css";
 import "./Animations.css";
@@ -15,14 +14,14 @@ function updateQueue(userQueue) {
 }
 
 function WaitingQueue() {
-    const [userQueue] = useState(useContext(GlobalVals).userBattleQueue);
+    //const [userQueue] = useState(useContext(GlobalVals).userBattleQueue);
 
     return (
         <div className="queue-container">
             <h3 align="center">Waiting Queue</h3>
             <hr/>
             <div className="queue-scroll-container">
-                {updateQueue(userQueue)}
+                {updateQueue(useContext(GlobalVals).userBattleQueue)}
             </div>
         </div>
     );
