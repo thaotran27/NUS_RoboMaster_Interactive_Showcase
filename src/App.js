@@ -40,6 +40,13 @@ window.closePeerConnection = function () {
     clearTimeout(myTimer);
     countdownVal = 40;
 
+    for (var key in window.keyTimers)
+        if (window.keyTimers[key] !== null)
+            clearInterval(window.keyTimers[key]);
+    window.keyTimers= {};
+    document.onkeydown = null;
+    document.onkeyup = null;
+
     // If this function is called, the user is only leaving in a controlled manner
     // i.e. not closing the entire browser window
     window.serverConnection.send(JSON.stringify({
@@ -48,8 +55,6 @@ window.closePeerConnection = function () {
     }));
 
     try {
-        document.onkeydown = null;
-        document.onkeyup = null;
         window.rtcDataChannel.send(JSON.stringify({}));
         window.rtcDataChannel.close();
         window.rtcPeerConnection.close();
