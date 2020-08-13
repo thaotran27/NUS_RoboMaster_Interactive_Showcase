@@ -5,7 +5,7 @@ function KeyboardController() {
     var keys = new Set(["w", "a", "s", "d", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", "e"]);
     var keysPressed = {};
 
-    var repeatTime = 20;
+    var repeatTime = 200;
 
     document.onkeydown = function(event) {
         // Filter out all other keys

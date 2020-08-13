@@ -112,8 +112,8 @@ class App extends Component {
     }
 
     componentWillMount() {
-        //window.serverConnection = new WebSocket("ws://54.179.2.91:49621");
-        window.serverConnection = new WebSocket("ws://localhost:49621");
+        window.serverConnection = new WebSocket("ws://54.179.2.91:49621");
+        //window.serverConnection = new WebSocket("ws://localhost:49621");
 
         this.props.history.listen(function (location, action) {
             if (location.pathname === "/game-select" && action === "POP") {
