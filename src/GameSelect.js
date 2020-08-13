@@ -43,7 +43,7 @@ function GameSelect(props) {
                     </div>
 
                     <div className="image-container">
-                        <Link to="game-select/shooting" onClick={() => goToShooting()}>
+                        <Link onClick={() => window.appComponent.setState({notificationMessage: "Sorry, the shooting game is not ready yet!"})}>
                             <img src={require("./imgs/shooting_image.PNG")} alt="Shooting Selection"/>
                         </Link>
                         <h3 align="center" className="image-para">Shooting</h3>
@@ -53,6 +53,10 @@ function GameSelect(props) {
         
         </div>
     );
+
+    //<Link to="game-select/shooting" onClick={() => goToShooting()}>
+    //    <img src={require("./imgs/shooting_image.PNG")} alt="Shooting Selection"/>
+    //</Link>
 }
 
 export default withRouter(GameSelect);
