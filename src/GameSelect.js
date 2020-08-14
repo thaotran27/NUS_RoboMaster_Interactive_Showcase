@@ -8,6 +8,7 @@ import "./Animations.css";
 
 function goToBattle() {
     window.appComponent.setState({notificationMessage: "Joining 1v1 battle game..."});
+    window.joinedGame = "battle";
     window.serverConnection.send(JSON.stringify({
         type: "find-robot",
         joinedGame: "battle"
@@ -16,6 +17,7 @@ function goToBattle() {
 
 function goToShooting() {
     window.appComponent.setState({notificationMessage: "Joining shooting game..."});
+    window.joinedGame = "shooting";
     window.serverConnection.send(JSON.stringify({
         type: "find-robot",
         joinedGame: "shooting"

@@ -44,6 +44,7 @@ window.closePeerConnection = function (leaveKind) {
         if (window.keyTimers[key] !== null)
             clearInterval(window.keyTimers[key]);
     window.keyTimers= {};
+    window.joinedGame = null;
     document.onkeydown = null;
     document.onkeyup = null;
 
@@ -71,8 +72,16 @@ window.closePeerConnection = function (leaveKind) {
 
 var myTimer;
 var countdownVal = 40;
-function tickTimer(startCountdown, props) {
-    var timer = document.getElementById("time");
+function tickTimer(startCountdown, props, joinedGame) {
+    var timer = null;
+    if (joinedGame === "battle") {
+        timer = document.getElementById("battleTime");
+    } else if (joinedGame === "shooting") {
+        timer = document.getElementById("shootingTime");
+    } else {
+        console.error("User not in any game, but attempted to start game timer: " + joinedGame);
+        return;
+    }
 
     try {
         if (countdownVal === 0) {
@@ -93,7 +102,7 @@ function tickTimer(startCountdown, props) {
         console.log(e);
     }
 
-    myTimer = setTimeout(() => tickTimer(true, props), 1000);
+    myTimer = setTimeout(() => tickTimer(true, props, joinedGame), 1000);
 }
 
 
@@ -252,7 +261,7 @@ class App extends Component {
 
     answerHandler(parsedMessage) {
         window.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
-        tickTimer(false, this.props);
+        tickTimer(false, this.props, window.joinedGame);
         console.log("Received answer: " + parsedMessage.answer.answer);
         this.setState({notificationMessage: "Game started!"});
         this.sendToServer({
@@ -276,6 +285,18 @@ class App extends Component {
             }
         }
 
+        if (parsedMessage.instruction === "start-game") {
+            if (window.joinedGame === "battle") {
+
+            } else if (window.joinedGame === "shooting") {
+
+            } else {
+                console.log("")
+            }
+
+            document.getElementById("localRobotFeed").srcObject = window.myStream;
+        }
+
         if (parsedMessage.game === "battle") {
             console.log("Received battle queue: " + parsedMessage.updatedQueue);
             this.setState({ userBattleQueue: parsedMessage.updatedQueue });
@@ -285,10 +306,6 @@ class App extends Component {
         } else {
             console.error("Queue received for unknown game: " + parsedMessage.game);
         }
-
-        //if (parsedMessage.instruction === "start-game") {
-        //    document.getElementById("localRobotFeed").srcObject = window.myStream;
-        //}
     }
 }
 

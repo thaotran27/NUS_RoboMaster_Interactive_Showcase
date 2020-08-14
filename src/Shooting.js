@@ -31,7 +31,7 @@ function Shooting(props) {
                 <h3 align="center">Shooting</h3>
                 <hr/>
                 <video id="localRobotFeed" autoPlay={true} playsInline={true}></video>
-                <span>Time Left: </span><span id="time" className="seconds">-</span>
+                <span id="shootingTimeTitle">Time Left: </span><span id="shootingTime" className="seconds">-</span>
             </div>
 
             <WaitingQueue></WaitingQueue>
