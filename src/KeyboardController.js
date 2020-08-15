@@ -2,7 +2,7 @@
 function KeyboardController() {
     // Lookup of key codes to timer ID, or null for no repeat
     window.keyTimers = {};
-    var keys = new Set(["w", "a", "s", "d", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", "e"]);
+    var keys = new Set(["w", "a", "s", "d", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", " "]);
     var keysPressed = {};
 
     var repeatTime = 200;
