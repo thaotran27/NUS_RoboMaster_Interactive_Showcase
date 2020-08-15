@@ -24,14 +24,14 @@ function Battle(props) {
             <div className="help-container">
                 <h3 align="center">How To Play</h3>
                 <hr/>
-                <img src={require("./imgs/game_instructions.png")} alt="Gameplay Instructions"/>
+                <img src={require("./imgs/battle_instructions.png")} alt="Gameplay Instructions"/>
             </div>
 
             <div className="game-container">
                 <h3 align="center">1v1 Battle</h3>
                 <hr/>
                 <video id="localRobotFeed" autoPlay={true} playsInline={true}></video>
-                <span id="shootingTimeTitle">Time Left: </span><span id="battleTime" className="seconds">-</span>
+                <span id="battleTimeTitle">Time Left: </span><span id="battleTime" className="seconds">-</span>
             </div>
 
             <WaitingQueue></WaitingQueue>

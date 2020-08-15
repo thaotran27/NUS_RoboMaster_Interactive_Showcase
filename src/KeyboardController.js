@@ -2,7 +2,7 @@
 function KeyboardController() {
     // Lookup of key codes to timer ID, or null for no repeat
     window.keyTimers = {};
-    var keys = new Set(["w", "a", "s", "d", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", "e"]);
+    var keys = new Set(["w", "a", "s", "d", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", " "]);
     var keysPressed = {};
 
     var repeatTime = 200;
@@ -55,32 +55,6 @@ function KeyboardController() {
                 clearInterval(window.keyTimers[key]);
         window.keyTimers= {};
     };
-
-    // When key is pressed and we don't already think it's pressed, call the
-    // key action callback and set a timer to generate another one after a delay
-    /*document.onkeydown= function(event) {
-        var key= (event || window.event).key;
-        if (!(key in keys))
-            return true;
-        if (!(key in timers)) {
-            timers[key]= null;
-            keys[key]();
-            if (repeat!==0)
-                timers[key]= setInterval(keys[key], repeat);
-        }
-        return false;
-    };
-
-    // Cancel timeout and mark key as released on keyup
-    document.onkeyup= function(event) {
-        var key= (event || window.event).key;
-        if (key in timers) {
-            if (timers[key]!==null)
-                clearInterval(timers[key]);
-            delete timers[key];
-        }
-    };
-    */
 };
 
 export default KeyboardController;

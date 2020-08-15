@@ -32,13 +32,21 @@ window.initializePeerConnection = function () {
     window.rtcDataChannel = window.rtcPeerConnection.createDataChannel("control_channel", {
         reliable: true
     });
+
+    if (waitTimer != null) {
+        clearTimeout(waitTimer);
+    }
     console.log("Peer connection initialized");
 }
 
 
 window.closePeerConnection = function (leaveKind) {
-    clearTimeout(myTimer);
-    countdownVal = 40;
+    if (turnTimer != null) {
+        clearTimeout(turnTimer);
+    }
+    if (waitTimer != null) {
+        clearTimeout(waitTimer);
+    }
 
     for (var key in window.keyTimers)
         if (window.keyTimers[key] !== null)
@@ -70,13 +78,15 @@ window.closePeerConnection = function (leaveKind) {
 }
 
 
-var myTimer;
-var countdownVal = 40;
-function tickTimer(startCountdown, props, joinedGame) {
+var turnTimer = null;
+var turnTime = 40;
+function turnTimerTick(startValue, props, joinedGame) {
     var timer = null;
     if (joinedGame === "battle") {
+        document.getElementById("battleTimeTitle").innerHTML = "Time Left:";
         timer = document.getElementById("battleTime");
     } else if (joinedGame === "shooting") {
+        document.getElementById("shootingTimeTitle").innerHTML = "Time Left:";
         timer = document.getElementById("shootingTime");
     } else {
         console.error("User not in any game, but attempted to start game timer: " + joinedGame);
@@ -84,25 +94,48 @@ function tickTimer(startCountdown, props, joinedGame) {
     }
 
     try {
-        if (countdownVal === 0) {
+        if (startValue === -1) {
             timer.innerHTML = "-";
             window.closePeerConnection("end-game");
             props.history.push("/game-select");
             return;
         }
 
-        if (startCountdown === false) {
-            countdownVal = 40;
-            timer.innerHTML = countdownVal;
-        } else {
-            countdownVal -= 1;
-            timer.innerHTML = countdownVal;
-        }
+        timer.innerHTML = startValue;
     } catch (e) {
         console.log(e);
     }
 
-    myTimer = setTimeout(() => tickTimer(true, props, joinedGame), 1000);
+    turnTimer = setTimeout(() => turnTimerTick(startValue-1, props, joinedGame), 1000);
+}
+
+
+var waitTimer = null;
+function waitTimerTick(startValue, joinedGame) {
+    var timer = null;
+    if (joinedGame === "battle") {
+        document.getElementById("battleTimeTitle").innerHTML = "Estimated wait time:";
+        timer = document.getElementById("battleTime");
+    } else if (joinedGame === "shooting") {
+        document.getElementById("shootingTimeTitle").innerHTML = "Estimated wait time:";
+        timer = document.getElementById("shootingTime");
+    } else {
+        console.error("User not in any game, but attempted to start wait timer: " + joinedGame);
+        return;
+    }
+
+    try {
+        if (startValue === -1) {
+            clearTimeout(waitTimer);
+            return;
+        }
+
+        timer.innerHTML = startValue;
+    } catch (e) {
+        console.log(e);
+    }
+
+    waitTimer = setTimeout(() => waitTimerTick(startValue-1, joinedGame), 1000);
 }
 
 
@@ -261,7 +294,7 @@ class App extends Component {
 
     answerHandler(parsedMessage) {
         window.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(parsedMessage.answer));
-        tickTimer(false, this.props, window.joinedGame);
+        turnTimerTick(turnTime, this.props, window.joinedGame);
         console.log("Received answer: " + parsedMessage.answer.answer);
         this.setState({notificationMessage: "Game started!"});
         this.sendToServer({
@@ -272,29 +305,53 @@ class App extends Component {
     // This will re-render the ENTIRE website for all users if it is called. 
     // For a start, I do not want to re-render while the user is in a game, they couldn't care less about the queue anyways.
     updateQueueHandler(parsedMessage) {
-        if (parsedMessage.instruction === "normal-update") {
-            // We do not update here if the RTC peer connection object is in the connected state.
-            if (window.rtcPeerConnection == null) {
-                // Continue with update if there is no window.rtcPeerConnection. This just means user is in queue
+        //if (parsedMessage.instruction === "normal-update") {
+        if (window.rtcPeerConnection != null) {
+            // rtcPeerConnection exists, however we want to check if it is in a connected state.
+            if (window.rtcPeerConnection.connectionState === "connected") {
+                return; // We do not perform an update.
+            }
+        } else {
+            // Continue with update if there is no window.rtcPeerConnection. This just means user is in queue 
+        }
+        //}
+
+        if (parsedMessage.game === "battle" && this.props.location.pathname === "/game-select/battle") {
+            if (!this.state.userBattleQueue.includes(window.username)) { // Indicates user is entering queue for the first time
+                window.placeInQueue = parsedMessage.updatedQueue.indexOf(window.username)+1;
+                var waitTime = window.placeInQueue * turnTime;
+                waitTimerTick(waitTime, parsedMessage.game);
             } else {
-                // rtcPeerConnection exists, however we want to check if it is in a connected state.
-                // If it is, we do not update.
-                if (window.rtcPeerConnection.connectionState === "connected") {
-                    return; // We do not perform an update.
+                var newPlaceInQueue = parsedMessage.updatedQueue.indexOf(window.username)+1;
+                if (newPlaceInQueue < window.placeInQueue) {
+                    if (waitTimer != null) {
+                        clearTimeout(waitTimer);
+                    }
+                    window.placeInQueue = newPlaceInQueue;
+                    waitTime = newPlaceInQueue * turnTime;
+                    waitTimerTick(waitTime, parsedMessage.game);
                 }
             }
-        }
 
-        if (parsedMessage.instruction === "start-game") {
-            if (window.joinedGame === "battle") {
-
-            } else if (window.joinedGame === "shooting") {
-
+        } else if (parsedMessage.game === "shooting" && this.props.location.pathname === "/game-select/shooting") {
+            if (!this.state.userShootingQueue.includes(window.username)) { // Indicates user is entering queue for the first time
+                window.placeInQueue = parsedMessage.updatedQueue.indexOf(window.username)+1;
+                var waitTime = window.placeInQueue * turnTime;
+                waitTimerTick(waitTime, parsedMessage.game);
             } else {
-                console.log("")
+                var newPlaceInQueue = parsedMessage.updatedQueue.indexOf(window.username)+1;
+                if (newPlaceInQueue < window.placeInQueue) {
+                    if (waitTimer != null) {
+                        clearTimeout(waitTimer);
+                    }
+                    window.placeInQueue = newPlaceInQueue;
+                    waitTime = newPlaceInQueue * turnTime;
+                    waitTimerTick(waitTime, parsedMessage.game);
+                }
             }
 
-            document.getElementById("localRobotFeed").srcObject = window.myStream;
+        } else { // User is on another page. In this case we do not update the estimated wait time.
+            // nop
         }
 
         if (parsedMessage.game === "battle") {

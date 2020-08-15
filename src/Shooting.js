@@ -24,7 +24,7 @@ function Shooting(props) {
             <div className="help-container">
                 <h3 align="center">How To Play</h3>
                 <hr/>
-                <img src={require("./imgs/game_instructions.png")} alt="Gameplay Instructions"/>
+                <img src={require("./imgs/shooting_instructions.png")} alt="Gameplay Instructions"/>
             </div>
 
             <div className="game-container">
