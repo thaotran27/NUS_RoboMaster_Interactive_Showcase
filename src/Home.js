@@ -53,6 +53,8 @@ class Home extends Component {
                         <input id="usernameTextBox" type="text" placeholder="Enter any nickname..."></input>
                         <button onClick={this.startButtonHandler.bind(this)}>Start!</button>
                     </div>
+                    <br/>
+                    <h3>For the best experience, please use Chrome on Windows.</h3>
                 </div>
             </div>
         );
