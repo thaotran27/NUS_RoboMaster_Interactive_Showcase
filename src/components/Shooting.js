@@ -1,35 +1,32 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { withRouter } from "react-router";
 
-import { GlobalVals }  from "./GlobalVals.js"
-import KeyboardController from "./KeyboardController.js"
+import keyboardController from "../common/KeyboardController.js"
 import WaitingQueue from "./WaitingQueue.js"
 
 import "./Battle.css";
-import "./Animations.css";
-
-var keyboardController;
+import "../common/Animations.css";
 
 function Shooting(props) {
-    if (useContext(GlobalVals).isLoggedIn === false) {
-        console.log("User not logged in, heading back to home");
-        props.history.push("/");
-        return <div></div>;
-    }
+    const [userShootingQueue, setUserShootingQueue] = useState([]);
 
-    keyboardController = new KeyboardController();
+    // if (useContext(GlobalVals).isLoggedIn === false) {
+    //     console.log("User not logged in, heading back to home");
+    //     props.history.push("/");
+    //     return <div></div>;
+    // }
 
     return (
         <div className="window-container">
             <div className="help-container">
                 <h3 align="center">How To Play</h3>
-                <hr/>
-                <img src={require("./imgs/shooting_instructions.png")} alt="Gameplay Instructions"/>
+                <hr />
+                <img src={require("../assets/shooting_instructions.png")} alt="Gameplay Instructions" />
             </div>
 
             <div className="game-container">
                 <h3 align="center">Shooting</h3>
-                <hr/>
+                <hr />
                 <video id="localRobotFeed" autoPlay={true} playsInline={true}></video>
                 <span id="shootingTimeTitle">Time Left: </span><span id="shootingTime" className="seconds">-</span>
             </div>

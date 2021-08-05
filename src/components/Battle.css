@@ -89,7 +89,7 @@
     border-style: solid;
     border-width: 0.1vw;
     border-color: white;
-    background-image: url("./imgs/wait_in_queue_placeholder.png");
+    background-image: url("../assets/wait_in_queue_placeholder.png");
     background-size: contain;
     background-position: center;
     margin-top: 2%;
