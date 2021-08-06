@@ -5,6 +5,7 @@ class SignallingServer {
         this.loginMessage = undefined;
         this.offerMessage = undefined;
         this.answerMessage = undefined;
+        this.updatedQueueMessage = undefined;
     }
 
 
@@ -36,6 +37,7 @@ class SignallingServer {
                     this.answerMessage = parsedMessage;
                     break;
                 case "update-queue":
+                    this.updatedQueueMessage = parsedMessage;
                     break;
                 case "leave":
                     break;
@@ -127,6 +129,10 @@ class SignallingServer {
         this._send({
             type: "user-start-game"
         });
+    }
+
+    getUpdatedQueue() {
+        return this.updatedQueueMessage.updatedQueue
     }
 }
 
