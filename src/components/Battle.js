@@ -22,6 +22,11 @@ function Battle(props) {
             history.push("/");
         } else {
             webRTC.setVideoCallback(setVideoStream);
+            keyboardController.setKeyPressCallback((pressedKeys) => {
+                console.log(pressedKeys);
+                // webRTC.sendKeyPress(keysPressed);
+            });
+            keyboardController.start();
         }
     }, []);
 
