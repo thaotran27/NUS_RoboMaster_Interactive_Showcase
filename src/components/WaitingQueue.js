@@ -16,7 +16,11 @@ function WaitingQueue() {
   const [userQueue, setUserQueue] = useState([]);
 
   setInterval(() => {
-    setUserQueue(signallingServer.updatedQueueMessage.updatedQueue);
+    setUserQueue(
+      signallingServer.updatedQueueMessage
+        ? signallingServer.updatedQueueMessage.updatedQueue
+        : []
+    );
   }, 1000);
 
   return (
