@@ -31,9 +31,13 @@ function GameSelect(props) {
                                 webRTC.setAnswer(answer);
                                 signallingServer.startGame();
 
+                                location.push({
+                                    purpose: "playing"
+                                })
+
                                 history.push({
                                     pathname: "/game-select/battle",
-                                    username: location.username
+                                    username: location.username,
                                 });
                             })
                             .catch((error) => {
@@ -45,9 +49,15 @@ function GameSelect(props) {
                     });
             })
             .catch((error) => {
-                // TODO Handle no robot found
-                window.alert(error);
-            })
+                // Handle no robot found
+                location.push({
+                    purpose: "waiting"
+                })
+
+                history.push({
+                    pathname: "/game-select/battle",
+                    username: location.username,
+                });
     }
 
     const goToShooting = () => {
