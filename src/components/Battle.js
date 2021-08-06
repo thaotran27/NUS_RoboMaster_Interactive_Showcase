@@ -22,7 +22,7 @@ function Battle(props) {
             history.push("/");
         } else {
             webRTC.setVideoCallback(setVideoStream);
-            keyboardController.setKeyPressCallback(() => {
+            keyboardController.setKeyPressCallback((pressedKeys) => {
                 webRTC.sendKeyPress(pressedKeys);
             });
             keyboardController.start();
