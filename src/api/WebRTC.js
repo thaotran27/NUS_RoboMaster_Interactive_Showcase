@@ -57,6 +57,11 @@ class WebRTC {
     }
 
 
+    sendKeyPress(keysPressed) {
+        this.rtcDataChannel.send(JSON.stringify(keysPressed));
+    }
+
+
     // Pass a state setter into to this have the video stream bind to a <video> tag
     setVideoCallback(callback) {
         this.rtcPeerConnection.addEventListener("track", (event) => {

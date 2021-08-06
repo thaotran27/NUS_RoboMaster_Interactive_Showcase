@@ -1,10 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import signallingServer from '../api/SignallingServer';
 
 import "./Home.css";
 import "../common/Animations.css";
+import keyboardController from '../common/KeyboardController';
 
 function Home(props) {
     const history = useHistory();
