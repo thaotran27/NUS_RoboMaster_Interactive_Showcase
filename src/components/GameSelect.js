@@ -52,12 +52,13 @@ function GameSelect(props) {
                 // Handle no robot found
                 location.push({
                     purpose: "waiting"
-                })
+                });
 
                 history.push({
                     pathname: "/game-select/battle",
                     username: location.username,
                 });
+            });
     }
 
     const goToShooting = () => {
