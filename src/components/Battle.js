@@ -18,7 +18,8 @@ function Battle(props) {
 
     useEffect(() => {
         if (!location.username) {
-            window.alert("Please log in before playing a game!");
+            // window.alert("Please log in before playing a game!");
+            props.openNotification('error',"Login Error", "Please log in before playing a game!");
             history.push("/");
         } else {
             webRTC.setVideoCallback(setVideoStream);

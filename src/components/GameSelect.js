@@ -13,7 +13,8 @@ function GameSelect(props) {
 
     useEffect(() => {
         if (!location.username) {
-            window.alert("Please log in before playing a game!");
+            // window.alert("Please log in before playing a game!");
+            props.openNotification('error', "Login Error", "Please log in before playing a game!");
             history.push("/");
         }
     }, []);
@@ -22,12 +23,14 @@ function GameSelect(props) {
         signallingServer.findRobot("battle")
             .then((robotName) => {
                 console.log("Initializing peer connection");
+                props.openNotification('info', "", "Looking for robots...");
                 webRTC.initializePeerConnection()
                     .then(() => {
                         console.log("Sending offer to robot: " + robotName);
                         signallingServer.sendOffer(robotName, webRTC.getOffer())
                             .then((answer) => {
                                 console.log("Game can be started");
+                                props.openNotification('success', "", "Game successfully started!");
                                 webRTC.setAnswer(answer);
                                 signallingServer.startGame();
 
@@ -37,16 +40,16 @@ function GameSelect(props) {
                                 });
                             })
                             .catch((error) => {
-                                window.alert(error);
+                                props.openNotification('error',"Error", error.message);
                             });
                     })
                     .catch((error) => {
-                        window.alert(error);
+                        props.openNotification('error',"Error", error.message);
                     });
             })
             .catch((error) => {
                 // TODO Handle no robot found
-                window.alert(error);
+                props.openNotification('error',"Error", error.message);
             })
     }
 
