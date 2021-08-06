@@ -33,7 +33,8 @@ function GameSelect(props) {
 
                                 history.push({
                                     pathname: "/game-select/battle",
-                                    username: location.username
+                                    username: location.username,
+                                    purpose: "playing"
                                 });
                             })
                             .catch((error) => {
@@ -46,7 +47,11 @@ function GameSelect(props) {
             })
             .catch((error) => {
                 // TODO Handle no robot found
-                window.alert(error);
+                history.push({
+                    pathname: "/game-select/battle",
+                    username: location.username,
+                    purpose:  "waiting"
+                });
             })
     }
 
