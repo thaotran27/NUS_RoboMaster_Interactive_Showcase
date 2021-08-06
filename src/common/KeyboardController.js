@@ -27,6 +27,7 @@ class KeyboardController {
             // Execute if our key is being pressed for the first time.
             if (!(event.key in this.keyTimers)) {
                 this.keysPressed[event.key] = true;
+                this.keyPressCallback(this.keysPressed);
 
                 this.keyTimers[event.key] = setInterval(() => {
                     this.keysPressed[event.key] = true;
