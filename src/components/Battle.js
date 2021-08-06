@@ -20,7 +20,7 @@ function Battle(props) {
         if (!location.username) {
             window.alert("Please log in before playing a game!");
             history.push("/");
-        } else if (history.purpose === "playing") {
+        } else if (location.purpose === "playing") {
             webRTC.setVideoCallback(setVideoStream);
         }
     }, []);
