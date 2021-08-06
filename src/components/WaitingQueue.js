@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./Battle.css";
 import "../common/Animations.css";
@@ -15,13 +15,16 @@ function updateQueue(userQueue) {
 function WaitingQueue() {
   const [userQueue, setUserQueue] = useState([]);
 
-  setInterval(() => {
-    setUserQueue(
-      signallingServer.updatedQueueMessage
-        ? signallingServer.updatedQueueMessage.updatedQueue
-        : []
-    );
-  }, 1000);
+  useEffect(() => {
+    setInterval(() => {
+      setUserQueue(
+        signallingServer.updatedQueueMessage
+          ? signallingServer.updatedQueueMessage.updatedQueue
+          : []
+      );
+    }, 1000);
+  }, [])
+  
 
   return (
     <div className="queue-container">
