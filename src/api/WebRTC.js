@@ -12,12 +12,12 @@ class WebRTC {
             // WebRTC handshaking with robot
             this.rtcConfiguration = {
                 "iceServers": [
-                    { "url": "stun:stun.1.google.com:19302" }]
-                // {
-                //     "url": "turn:54.179.2.91:3478",
-                //     "username": "RaghavB",
-                //     "credential": "RMTurnServer"
-                // }]
+                    { "url": "stun:stun.1.google.com:19302" },
+                    {
+                        "url": "turn:18.142.123.26:3478",
+                        "username": "RaghavB",
+                        "credential": "RMTurnServer"
+                    }]
             };
 
             this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfiguration);
