@@ -84,9 +84,7 @@ function GameSelect(props) {
           </>
         ) : (
           <h3 align="center">
-            {buttonDisabled
-              ? "Loading"
-              : "Please choose a game you would like to play"}
+            Please choose a game you would like to play
           </h3>
         )}
 
@@ -96,11 +94,6 @@ function GameSelect(props) {
               <div
                 // to="/game-select/battle"
                 onClick={() => goToBattle()}
-                style={
-                  buttonDisabled
-                    ? { pointerEvents: "none", opacity: "70%" }
-                    : null
-                }
               >
                 <img
                   src={require("../assets/battle_image.PNG")}
