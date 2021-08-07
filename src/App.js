@@ -18,9 +18,6 @@ import slide3 from "./assets/arena-2018.jpg";
 import slide4 from "./assets/robot-engineer.jpg";
 import slide5 from "./assets/robot-photo3.jpg";
 
-import "antd/lib/notification/style/css";
-import { notification } from 'antd';
-
 // window.closePeerConnection = function (leaveKind) {
 //     // If this function is called, the user is only leaving in a controlled manner
 //     // i.e. not closing the entire browser window
@@ -45,24 +42,6 @@ import { notification } from 'antd';
 
 
 function App() {
-
-    const openNotification = (type, title, message) => {
-        //type: 'success', 'info', 'warning', 'error'
-        notification[type]({
-          message: title,
-          description: message,
-          duration: 3,
-        });
-      };
-
-    // const openNotification = (title, message) => {
-    //     const args = {
-    //       message: title,
-    //       description: message,
-    //       duration: 3,
-    //     };
-    //     notification['error'].open(args);
-    //   };
 
     const bgImageList = [slide1, slide2, slide3, slide4, slide5];
     window.appComponent = this;
@@ -89,9 +68,9 @@ function App() {
             </div>
 
             <Switch>
-                <Route path="/" exact component={() => (<Home openNotification={openNotification} />)} />
-                <Route path="/game-select/" exact component={() => (<GameSelect openNotification={openNotification} />)} />
-                <Route path="/game-select/battle" exact component={() => (<Battle openNotification={openNotification} placeholder={""} />)} />
+                <Route path="/" exact component={() => (<Home />)} />
+                <Route path="/game-select/" exact component={() => (<GameSelect  />)} />
+                <Route path="/game-select/battle" exact component={() => (<Battle  placeholder={""} />)} />
                 <Route path="/game-select/shooting" exact component={() => (<Shooting placeholder={""} />)} />
             </Switch>
 

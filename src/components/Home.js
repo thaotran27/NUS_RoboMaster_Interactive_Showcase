@@ -6,6 +6,8 @@ import signallingServer from '../api/SignallingServer';
 import "./Home.css";
 import "../common/Animations.css";
 
+import { openNotification } from "./Notification"
+
 function Home(props) {
     const history = useHistory();
 
@@ -18,14 +20,14 @@ function Home(props) {
                     pathname: "/game-select",
                     username: username
                 });
-                props.openNotification('success', '', 'Successfully logged in');
+                openNotification('success', '', 'Successfully logged in');
             })
             // .catch((error) => {
             //     window.alert(error);
             // });
 
             .catch((error) => {
-                props.openNotification('error', 'Login Error', error.message);
+                openNotification('error', 'Login Error', error.message);
             });
     }
 

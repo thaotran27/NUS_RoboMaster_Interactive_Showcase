@@ -9,6 +9,8 @@ import webRTC from '../api/WebRTC.js';
 import "./Battle.css";
 import "../common/Animations.css";
 
+import { openNotification } from "./Notification"
+
 function Battle(props) {
     const history = useHistory();
     const location = useLocation();
@@ -19,7 +21,7 @@ function Battle(props) {
     useEffect(() => {
         if (!location.username) {
             // window.alert("Please log in before playing a game!");
-            props.openNotification('error',"Login Error", "Please log in before playing a game!");
+            openNotification('error',"Login Error", "Please log in before playing a game!");
             history.push("/");
         } else {
             webRTC.setVideoCallback(setVideoStream);
