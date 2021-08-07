@@ -20,7 +20,7 @@ function Battle(props) {
         if (!location.username) {
             window.alert("Please log in before playing a game!");
             history.push("/");
-        } else if (location.purpose === "playing") {
+        } else if (history.purpose === "playing") {
             webRTC.setVideoCallback(setVideoStream);
             keyboardController.setKeyPressCallback((pressedKeys) => {
                 webRTC.sendKeyPress(pressedKeys);
