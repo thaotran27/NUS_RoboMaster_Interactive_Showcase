@@ -34,13 +34,10 @@ function GameSelect(props) {
                 webRTC.setAnswer(answer);
                 signallingServer.startGame();
 
-                location.push({
-                  purpose: "playing",
-                });
-
                 history.push({
                   pathname: "/game-select/battle",
                   username: location.username,
+                  purpose: "playing"
                 });
               })
               .catch((error) => {
@@ -53,13 +50,10 @@ function GameSelect(props) {
       })
       .catch((error) => {
         // Handle no robot found
-        location.push({
-          purpose: "waiting",
-        });
-
         history.push({
           pathname: "/game-select/battle",
           username: location.username,
+          purpose: "waiting"
         });
       });
   };
