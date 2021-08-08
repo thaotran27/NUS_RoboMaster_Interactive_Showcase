@@ -21,9 +21,9 @@ function Battle(props) {
     useEffect(() => {
         if (!location.username) {
             // window.alert("Please log in before playing a game!");
-            openNotification('error',"Login Error", "Please log in before playing a game!");
+            openNotification('error', "Login Error", "Please log in before playing a game!");
             history.push("/");
-        } else if (history.purpose === "playing") {
+        } else if (location.purpose === "playing") {
             webRTC.setVideoCallback(setVideoStream);
             keyboardController.setKeyPressCallback((pressedKeys) => {
                 webRTC.sendKeyPress(pressedKeys);
