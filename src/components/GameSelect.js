@@ -7,6 +7,8 @@ import webRTC from "../api/WebRTC.js";
 import "./GameSelect.css";
 import "../common/Animations.css";
 
+import { openNotification } from "./Notification"
+
 function GameSelect(props) {
   const history = useHistory();
   const location = useLocation();
@@ -15,7 +17,7 @@ function GameSelect(props) {
 
   useEffect(() => {
     if (!location.username) {
-      window.alert("Please log in before playing a game!");
+      openNotification('error', "Login Error", "Please log in before playing a game!");
       history.push("/");
     }
   }, []);
@@ -26,6 +28,7 @@ function GameSelect(props) {
       .findRobot("battle")
       .then((robotName) => {
         console.log("Initializing peer connection");
+        openNotification('info', "", "Looking for robots...");
         webRTC
           .initializePeerConnection()
           .then(() => {
@@ -34,6 +37,7 @@ function GameSelect(props) {
               .sendOffer(robotName, webRTC.getOffer())
               .then((answer) => {
                 console.log("Game can be started");
+                openNotification('success', "", "Game successfully started!");
                 webRTC.setAnswer(answer);
                 signallingServer.startGame();
                 setButtonDisabled(false);
@@ -45,17 +49,18 @@ function GameSelect(props) {
                 });
               })
               .catch((error) => {
-                window.alert(error);
+                openNotification('error', "Error", error.message);
                 setButtonDisabled(false);
               });
           })
           .catch((error) => {
-            window.alert(error);
+            openNotification('error', "Error", error.message);
             setButtonDisabled(false);
           });
       })
       .catch((error) => {
         // Handle no robot found
+        openNotification('error', "Error", error.message);
         setButtonDisabled(false);
         history.push({
           pathname: "/game-select/battle",

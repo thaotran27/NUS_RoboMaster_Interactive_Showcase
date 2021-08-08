@@ -7,6 +7,8 @@ import "./Home.css";
 import "../common/Animations.css";
 import keyboardController from '../common/KeyboardController';
 
+import { openNotification } from "./Notification"
+
 function Home(props) {
     const history = useHistory();
 
@@ -19,16 +21,20 @@ function Home(props) {
                     pathname: "/game-select",
                     username: username
                 });
+                openNotification('success', '', 'Successfully logged in');
             })
+            // .catch((error) => {
+            //     window.alert(error);
+            // });
+
             .catch((error) => {
-                window.alert(error);
+                openNotification('error', 'Login Error', error.message);
             });
     }
 
     return (
         <div className="welcome-container">
             <div className="welcome-box init-left">
-
                 <img src={require("../assets/rm_logo.png")} className="rm-logo" alt="robomaster logo" />
                 <h2 align="center">Welcome to Team LumiNUS's Interactive Robot Showcase!</h2>
                 <p align="center">
