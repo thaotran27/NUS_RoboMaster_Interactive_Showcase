@@ -5,7 +5,6 @@ import signallingServer from '../api/SignallingServer';
 
 import "./Home.css";
 import "../common/Animations.css";
-import keyboardController from '../common/KeyboardController';
 
 import { openNotification } from "./Notification"
 
@@ -36,7 +35,11 @@ function Home(props) {
         <div className="welcome-container">
             <div className="welcome-box init-left">
                 <img src={require("../assets/rm_logo.png")} className="rm-logo" alt="robomaster logo" />
-                <h2 align="center">Welcome to Team LumiNUS's Interactive Robot Showcase!</h2>
+                <h2 style={{
+                    color: "lightgray"
+                }}
+
+                    align="center">Welcome to Team LumiNUS's Interactive Robot Showcase!</h2>
                 <p align="center">
                     Get ready to experience the exciting gameplay elements of the RoboMaster competition <br />
                     by controlling our robots live from the comfort of your home!
@@ -47,6 +50,9 @@ function Home(props) {
                 <div className="usernameEntry">
 
                     <input
+                        style={{
+                            color: "black"
+                        }}
                         id="usernameTextBox"
                         type="text"
                         placeholder="Enter any nickname..."
@@ -56,6 +62,9 @@ function Home(props) {
                         }} />
 
                     <button
+                        style={{
+                            color: "black"
+                        }}
                         onClick={() => {
                             startButtonHandler();
                         }}>Start!</button>
