@@ -42,6 +42,7 @@ import slide5 from "./assets/robot-photo3.jpg";
 
 
 function App() {
+
     const bgImageList = [slide1, slide2, slide3, slide4, slide5];
     window.appComponent = this;
 
@@ -68,8 +69,8 @@ function App() {
 
             <Switch>
                 <Route path="/" exact component={() => (<Home />)} />
-                <Route path="/game-select/" exact component={() => (<GameSelect />)} />
-                <Route path="/game-select/battle" exact component={() => (<Battle placeholder={""} />)} />
+                <Route path="/game-select/" exact component={() => (<GameSelect  />)} />
+                <Route path="/game-select/battle" exact component={() => (<Battle  placeholder={""} />)} />
                 <Route path="/game-select/shooting" exact component={() => (<Shooting placeholder={""} />)} />
             </Switch>
 

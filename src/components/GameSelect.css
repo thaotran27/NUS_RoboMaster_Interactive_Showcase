@@ -80,6 +80,11 @@ div.selection-box span {
   animation-delay: 1.0s;
 }
 
+
+.image-para {
+    color: lightgray;
+}
+
 @keyframes hover-expand {
   from {
     transform: scale(1);
