@@ -60,7 +60,7 @@ function GameSelect(props) {
       })
       .catch((error) => {
         // Handle no robot found
-        openNotification('error', "Error", error.message);
+        openNotification('error', "Error", "No robots found, please wait");
         setButtonDisabled(false);
         history.push({
           pathname: "/game-select/battle",
