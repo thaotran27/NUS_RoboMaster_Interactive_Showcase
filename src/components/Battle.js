@@ -38,6 +38,7 @@ function Battle(props) {
           webRTC
             .initializePeerConnection()
             .then(() => {
+                openNotification('success', '', 'Get ready! Your turn is coming up next');
               signallingServer
                 .sendOffer(
                   signallingServer.offerMessage.robotName,
