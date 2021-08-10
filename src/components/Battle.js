@@ -78,6 +78,16 @@ function Battle(props) {
     }
   }, [videoStream]);
 
+  useEffect(() => {
+      // If user clicks back button, start leaveHandler
+      window.onpopstate = () => {
+          signallingServer._send({
+              type: "leave",
+              leaveType: "hard-exit"
+          })
+      }
+  })
+
   return (
     <div className="window-container">
       <div className="help-container">
