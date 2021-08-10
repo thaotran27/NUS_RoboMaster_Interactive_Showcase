@@ -10,6 +10,8 @@ import "./Battle.css";
 import "../common/Animations.css";
 import signallingServer from "../api/SignallingServer.js";
 
+import { openNotification } from "./Notification"
+
 function Battle(props) {
   const history = useHistory();
   const location = useLocation();
@@ -47,6 +49,7 @@ function Battle(props) {
 
                 // Stop checking if user has received an offer from a free robot
                 clearInterval(myVar);
+
 
                 // Change purpose to "playing"
                 history.push({
