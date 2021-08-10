@@ -10,7 +10,7 @@ import "./Battle.css";
 import "../common/Animations.css";
 import signallingServer from "../api/SignallingServer.js";
 
-import { openNotification } from "./Notification"
+import { openNotification } from "./Notification";
 
 function Battle(props) {
   const history = useHistory();
@@ -35,30 +35,37 @@ function Battle(props) {
       const myVar = setInterval(() => {
         if (signallingServer.offerMessage) {
           // If offer received, initialise connection and send offer to free robot
-          webRTC.initializePeerConnection().then(() => {
-            signallingServer
-              .sendOffer(
-                signallingServer.offerMessage.robotName,
-                webRTC.getOffer()
-              )
-              .then((answer) => {
-                // Once offer answered, start the game
-                console.log("Game can be started");
-                webRTC.setAnswer(answer);
-                signallingServer.startGame();
+          webRTC
+            .initializePeerConnection()
+            .then(() => {
+              signallingServer
+                .sendOffer(
+                  signallingServer.offerMessage.robotName,
+                  webRTC.getOffer()
+                )
+                .then((answer) => {
+                  // Once offer answered, start the game
+                  console.log("Game can be started");
+                  webRTC.setAnswer(answer);
+                  signallingServer.startGame();
 
-                // Stop checking if user has received an offer from a free robot
-                clearInterval(myVar);
+                  // Stop checking if user has received an offer from a free robot
+                  clearInterval(myVar);
 
-
-                // Change purpose to "playing"
-                history.push({
-                  pathname: "/game-select/battle",
-                  username: location.username,
-                  purpose: "playing",
+                  // Change purpose to "playing"
+                  history.push({
+                    pathname: "/game-select/battle",
+                    username: location.username,
+                    purpose: "playing",
+                  });
+                })
+                .catch((error) => {
+                  openNotification("error", "Error", error.message);
                 });
-              });
-          });
+            })
+            .catch((error) => {
+              openNotification("error", "Error", error.message);
+            });
         }
       }, 3000);
     }
