@@ -29,8 +29,10 @@ function Battle(props) {
       });
       keyboardController.start();
     } else if (location.purpose === "waiting") {
+      // Check if user has received an offer from a free robot
       const myVar = setInterval(() => {
         if (signallingServer.offerMessage) {
+          // If offer received, initialise connection and send offer to free robot
           webRTC.initializePeerConnection().then(() => {
             signallingServer
               .sendOffer(
@@ -38,12 +40,15 @@ function Battle(props) {
                 webRTC.getOffer()
               )
               .then((answer) => {
+                // Once offer answered, start the game
                 console.log("Game can be started");
                 webRTC.setAnswer(answer);
                 signallingServer.startGame();
 
-                clearInterval(myVar)
+                // Stop checking if user has received an offer from a free robot
+                clearInterval(myVar);
 
+                // Change purpose to "playing"
                 history.push({
                   pathname: "/game-select/battle",
                   username: location.username,
