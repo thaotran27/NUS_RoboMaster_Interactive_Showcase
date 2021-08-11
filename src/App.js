@@ -48,7 +48,8 @@ function App() {
 
     useEffect(() => {
         console.log("started");
-        signallingServer.initialize("localhost", 49621);
+        signallingServer.initialize("localhost", 49621); // Comment this if running on AWS
+        // signallingServer.initialize("http://18.142.123.26/", 49621); // Uncomment this if running on AWS
     }, []);
 
     return (
@@ -69,8 +70,8 @@ function App() {
 
             <Switch>
                 <Route path="/" exact component={() => (<Home />)} />
-                <Route path="/game-select/" exact component={() => (<GameSelect  />)} />
-                <Route path="/game-select/battle" exact component={() => (<Battle  placeholder={""} />)} />
+                <Route path="/game-select/" exact component={() => (<GameSelect />)} />
+                <Route path="/game-select/battle" exact component={() => (<Battle placeholder={""} />)} />
                 <Route path="/game-select/shooting" exact component={() => (<Shooting placeholder={""} />)} />
             </Switch>
 
