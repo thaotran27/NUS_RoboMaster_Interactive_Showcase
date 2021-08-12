@@ -34,11 +34,18 @@ function Battle(props) {
       // Check if user has received an offer from a free robot
       const myVar = setInterval(() => {
         if (signallingServer.offerMessage) {
+          // Stop checking if user has received an offer from a free robot
+          clearInterval(myVar);
+
           // If offer received, initialise connection and send offer to free robot
           webRTC
             .initializePeerConnection()
             .then(() => {
-                openNotification('success', '', 'Get ready! Your turn is coming up next');
+              openNotification(
+                "success",
+                "",
+                "Get ready! Your turn is coming up next"
+              );
               signallingServer
                 .sendOffer(
                   signallingServer.offerMessage.robotName,
@@ -50,8 +57,8 @@ function Battle(props) {
                   webRTC.setAnswer(answer);
                   signallingServer.startGame();
 
-                  // Stop checking if user has received an offer from a free robot
-                  clearInterval(myVar);
+                  // Clear offer message
+                  signallingServer.offerMessage = null;
 
                   // Change purpose to "playing"
                   history.push({
@@ -79,14 +86,14 @@ function Battle(props) {
   }, [videoStream]);
 
   useEffect(() => {
-      // If user clicks back button, start leaveHandler
-      window.onpopstate = () => {
-          signallingServer._send({
-              type: "leave",
-              leaveType: "hard-exit"
-          })
-      }
-  })
+    // If user clicks back button, start leaveHandler
+    window.onpopstate = () => {
+      signallingServer._send({
+        type: "leave",
+        leaveType: "hard-exit",
+      });
+    };
+  });
 
   return (
     <div className="window-container">
