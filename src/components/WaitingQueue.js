@@ -16,14 +16,19 @@ function WaitingQueue() {
   const [userQueue, setUserQueue] = useState([]);
 
   useEffect(() => {
-    setInterval(() => {
+    const userQueueCheck = setInterval(() => {
       setUserQueue(
         signallingServer.updatedQueueMessage
           ? signallingServer.updatedQueueMessage.updatedQueue
           : []
       );
     }, 1000);
+
+    return () => {
+      clearInterval(userQueueCheck)
+    }
   }, [])
+  
   
 
   return (
