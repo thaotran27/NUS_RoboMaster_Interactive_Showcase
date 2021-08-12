@@ -35,10 +35,10 @@ function Battle(props) {
       keyboardController.start();
 
       // Start UI Timer at 30s
-      setIsTimerRunning(true);
-      setTimeLeftToPlay(30);
       setWhenTimerStarted(Date.now());
-
+      setTimeLeftToPlay(30);
+      setIsTimerRunning(true);
+      
       // Create timeout to remove user once user has played for 30s
       setTimeout(() => {
         // Disconnect from robot
@@ -104,11 +104,16 @@ function Battle(props) {
 
   // Timer function to be updated every second while
   useEffect(() => {
-    setTimeout(() => {
-      const TimeLeft = whenTimerStarted + 30000 - Date.now();
-      setTimeLeftToPlay(Math.floor(TimeLeft / 1000));
-    }, 1000);
-  }, [timeLeftToPlay, isTimerRunning]);
+    if (isTimerRunning && timeLeftToPlay > 0) {
+      setTimeout(() => {
+        const TimeLeft = whenTimerStarted + 30000 - Date.now();
+        setTimeLeftToPlay(Math.floor(TimeLeft / 1000));
+      }, 1000);
+    }
+    else if (timeLeftToPlay === 0) {
+      setIsTimerRunning(false);
+    }
+  }, [isTimerRunning, timeLeftToPlay, whenTimerStarted]);
 
   useEffect(() => {
     if (videoRef.current) {
