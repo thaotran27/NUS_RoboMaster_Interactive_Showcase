@@ -82,9 +82,9 @@ function GameSelect(props) {
             <div class="loader"></div>
             <h3>
               Loading
-              <span class="loaderdotone">.</span>
-              <span class="loaderdottwo">.</span>
-              <span class="loaderdotthree">.</span>
+              <span className="loaderdotone">.</span>
+              <span className="loaderdottwo">.</span>
+              <span className="loaderdotthree">.</span>
             </h3>
           </>
         ) : (
