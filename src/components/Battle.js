@@ -17,6 +17,9 @@ function Battle(props) {
   const location = useLocation();
 
   const [videoStream, setVideoStream] = useState(null);
+  const [timeLeftToPlay, setTimeLeftToPlay] = useState(30);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [whenTimerStarted, setWhenTimerStarted] = useState(0);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -30,6 +33,26 @@ function Battle(props) {
         webRTC.sendKeyPress(pressedKeys);
       });
       keyboardController.start();
+
+      // Start UI Timer at 30s
+      setIsTimerRunning(true);
+      setTimeLeftToPlay(30);
+      setWhenTimerStarted(Date.now());
+
+      // Create timeout to remove user once user has played for 30s
+      setTimeout(() => {
+        // Disconnect from robot
+        signallingServer._send({
+          type: "leave",
+          leaveType: "timer-end",
+        });
+
+        // Change purpose to "waiting"
+        history.push({
+          pathname: "/game-select",
+          username: location.username,
+        });
+      }, 30000);
     } else if (location.purpose === "waiting") {
       // Check if user has received an offer from a free robot
       const myVar = setInterval(() => {
@@ -79,6 +102,14 @@ function Battle(props) {
     }
   }, []);
 
+  // Timer function to be updated every second while
+  useEffect(() => {
+    setTimeout(() => {
+      const TimeLeft = whenTimerStarted + 30000 - Date.now();
+      setTimeLeftToPlay(Math.floor(TimeLeft / 1000));
+    }, 1000);
+  }, [timeLeftToPlay, isTimerRunning]);
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.srcObject = videoStream;
@@ -115,9 +146,9 @@ function Battle(props) {
           playsInline={true}
           ref={videoRef}
         ></video>
-        <span id="battleTimeTitle">Time Left: </span>
+        <span id="battleTimeTitle">Time Left:</span>
         <span id="battleTime" className="seconds">
-          -
+          {location.purpose === "playing" ? timeLeftToPlay : "-"}
         </span>
       </div>
 
