@@ -23,6 +23,7 @@ function Battle(props) {
   const videoRef = useRef(null);
 
   useEffect(() => {
+    
     if (!location.username) {
       window.alert("Please log in before playing a game!");
       history.push("/");
@@ -41,6 +42,7 @@ function Battle(props) {
       // Create timeout to remove user once user has played for 30s
       setTimeout(() => {
         // Disconnect from robot
+        webRTC.closePeerConnection();
         signallingServer._send({
           type: "leave",
           leaveType: "timer-end",
@@ -52,14 +54,17 @@ function Battle(props) {
           username: location.username,
         });
       }, 30000);
+
     } else if (location.purpose === "waiting") {
       // Check if user has received an offer from a free robot
+      webRTC.setVideoCallback(setVideoStream);
       const myVar = setInterval(() => {
         if (signallingServer.offerMessage) {
           // Stop checking if user has received an offer from a free robot
           clearInterval(myVar);
 
           // If offer received, initialise connection and send offer to free robot
+          webRTC.closePeerConnection();
           webRTC
             .initializePeerConnection()
             .then(() => {
@@ -123,6 +128,7 @@ function Battle(props) {
   useEffect(() => {
     // If user clicks back button, start leaveHandler
     window.onpopstate = () => {
+      webRTC.closePeerConnection();
       signallingServer._send({
         type: "leave",
         leaveType: "hard-exit",

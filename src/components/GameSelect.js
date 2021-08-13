@@ -62,15 +62,34 @@ function GameSelect(props) {
             setButtonDisabled(false);
           });
       })
+
       .catch((error) => {
         // Handle no robot found
-        openNotification("error", "Error", "No robots found, please wait");
-        setButtonDisabled(false);
-        history.push({
-          pathname: "/game-select/battle",
-          username: location.username,
-          purpose: "waiting",
-        });
+        openNotification("info", "Info", "No robots available, entering spectator mode...");
+
+        webRTC.initializePeerConnection()
+          .then(() => {
+            console.log("Sending offer to arena-cam");
+            signallingServer.sendOffer("arena-cam", webRTC.getOffer())
+              .then((answer) => {
+                webRTC.setAnswer(answer);
+                setButtonDisabled(false);
+
+                history.push({
+                  pathname: "/game-select/battle",
+                  username: location.username,
+                  purpose: "waiting",
+                });
+              })
+              .catch((error) => {
+                openNotification("error", "Error", error.message);
+                setButtonDisabled(false);
+              });
+          })
+          .catch(() => {
+            openNotification("error", "Error", error.message);
+            setButtonDisabled(false);
+          });
       });
   };
 
