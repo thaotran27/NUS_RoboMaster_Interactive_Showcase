@@ -48,8 +48,8 @@ function App() {
 
     useEffect(() => {
         console.log("started");
-        signallingServer.initialize("localhost", 49621); // Comment this if running on AWS
-        // signallingServer.initialize("http://18.142.123.26/", 49621); // Uncomment this if running on AWS
+        // signallingServer.initialize("localhost", 49621); // Comment this if running on AWS
+        signallingServer.initialize("http://18.142.123.26", 49621); // Uncomment this if running on AWS
     }, []);
 
     return (
