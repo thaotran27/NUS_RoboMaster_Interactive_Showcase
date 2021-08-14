@@ -18,28 +18,6 @@ import slide3 from "./assets/arena-2018.jpg";
 import slide4 from "./assets/robot-engineer.jpg";
 import slide5 from "./assets/robot-photo3.jpg";
 
-// window.closePeerConnection = function (leaveKind) {
-//     // If this function is called, the user is only leaving in a controlled manner
-//     // i.e. not closing the entire browser window
-//     window.serverConnection.send(JSON.stringify({
-//         type: "leave",
-//         leaveType: leaveKind
-//     }));
-// }
-//     try {
-//         if (startValue === -1) {
-//             timer.innerHTML = "-";
-//             window.closePeerConnection("end-game");
-//             props.history.push("/game-select");
-//             return;
-//         }
-
-//         timer.innerHTML = startValue;
-//     } catch (e) {
-//         console.log(e);
-//     }
-// }
-
 
 function App() {
 
@@ -48,8 +26,8 @@ function App() {
 
     useEffect(() => {
         console.log("started");
-        // signallingServer.initialize("localhost", 49621); // Comment this if running on AWS
-        signallingServer.initialize("18.142.123.26", 49621); // Uncomment this if running on AWS
+        signallingServer.initialize("localhost", 49621); // Comment this if running on AWS
+        // signallingServer.initialize("18.142.123.26", 49621); // Uncomment this if running on AWS
     }, []);
 
     return (
@@ -80,35 +58,6 @@ function App() {
 }
 
 
-//     this.props.history.listen(function (location, action) {
-//         if (location.pathname === "/game-select" && action === "POP") {
-//             // Do not delete user connection object from server in this case.
-//             // Only remove references to the robot and back, and remove from queues.
-//             window.closePeerConnection("browser-back");
-//         } else if (location.pathname === "/" && action === "POP") {
-//             // Going back to home screen means that user needs to perform login from
-//             // scratch. Delete connection object, remove from queues.
-//             window.closePeerConnection("hard-exit");
-//         }
-//     });
-
-//             case "update-queue":
-//                 this.updateQueueHandler(parsedMessage);
-//                 break;
-
-//             case "leave":
-//                 window.closePeerConnection("browser-back");
-//                 console.log("Closing RTCPeerConnection to robot " + parsedMessage.name);
-//                 window.alert("Sorry, the robot has disconnected, please select a game again.");
-//                 this.props.history.push("/game-select");
-//                 break;
-
-//             default:
-//                 console.log("Received unknown message from signalling server.");
-//                 break;
-//         }
-//     };
-// }
 
 // requestOfferHandler(parsedMessage) {
 //     window.rtcPeerConnection.ondatachannel = function (event) {
