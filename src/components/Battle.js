@@ -41,6 +41,9 @@ function Battle(props) {
 
       // Create timeout to remove user once user has played for 30s
       setTimeout(() => {
+        // Stop keyboard controller
+        keyboardController.stop()
+
         // Disconnect from robot
         webRTC.closePeerConnection();
         signallingServer.leaveGame(location.username);
