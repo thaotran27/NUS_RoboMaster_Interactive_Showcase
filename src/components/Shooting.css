@@ -1,0 +1,114 @@
+.window-container {
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: lightgray;
+    overflow: hidden;
+}
+
+.help-container {
+    background-color: rgba(0, 0, 0, 0.95);
+    box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);    
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1;
+    height: auto;
+    z-index: inherit;
+    margin: 0.5%;
+}
+
+.game-container {
+    background-color: rgba(0, 0, 0, 0.95);
+    box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);    
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: auto;
+    z-index: inherit;
+    margin: 0.5%;
+}
+
+.seconds {
+    font-size: xx-large;
+    margin-bottom: 2%;
+}
+
+.queue-container {
+    background-color: rgba(0, 0, 0, 0.95);
+    box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);    
+    flex: 1;
+    height: auto;
+    max-height: 60vh;
+    z-index: inherit;
+    margin: 0.5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 1%;
+}
+
+.queue-scroll-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+    width: 90%;
+    margin-top: 2%;
+}
+
+::-webkit-scrollbar {
+    width: 2%;
+}
+
+::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: white;
+    border-radius: 10px;
+  }
+
+.queue-scroll-container span {
+    margin: 1%;
+}
+
+.game-container video {
+    height: 100%;
+    width: 95%;
+    border-style: solid;
+    border-width: 0.1vw;
+    border-color: white;
+    background-image: url("../assets/wait_in_queue_placeholder.png");
+    background-size: contain;
+    background-position: center;
+    margin-top: 2%;
+    margin-bottom: 2.5%;
+}
+
+.window-container hr {
+    width: 90%;
+}
+
+.game-container hr {
+    width: 95%;
+}
+
+.help-container img {
+    max-width: 90%;
+    max-height: 100%;
+    margin-top: 5%;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-bottom: 8%;
+}
