@@ -65,12 +65,18 @@ function GameSelect(props) {
 
       .catch((error) => {
         // Handle no robot found
-        openNotification("info", "Info", "No robots available, entering spectator mode...");
+        openNotification(
+          "info",
+          "Info",
+          "No robots available, entering spectator mode..."
+        );
 
-        webRTC.initializePeerConnection()
+        webRTC
+          .initializePeerConnection()
           .then(() => {
             console.log("Sending offer to arena-cam");
-            signallingServer.sendOffer("arena-cam", webRTC.getOffer())
+            signallingServer
+              .sendOffer("arena-cam", webRTC.getOffer())
               .then((answer) => {
                 webRTC.setAnswer(answer);
                 setButtonDisabled(false);
@@ -94,7 +100,76 @@ function GameSelect(props) {
   };
 
   const goToShooting = () => {
-    signallingServer.findRobot("shooting");
+    setButtonDisabled(true);
+    signallingServer
+      .findRobot("shooting")
+      .then((robotName) => {
+        console.log("Initializing peer connection");
+        openNotification("info", "", "Looking for robots...");
+        webRTC
+          .initializePeerConnection()
+          .then(() => {
+            console.log("Sending offer to robot: " + robotName);
+            signallingServer
+              .sendOffer(robotName, webRTC.getOffer())
+              .then((answer) => {
+                console.log("Game can be started");
+                openNotification("success", "", "Game successfully started!");
+                webRTC.setAnswer(answer);
+                signallingServer.startGame();
+                setButtonDisabled(false);
+
+                history.push({
+                  pathname: "/game-select/shooting",
+                  username: location.username,
+                  purpose: "playing",
+                });
+              })
+              .catch((error) => {
+                openNotification("error", "Error", error.message);
+                setButtonDisabled(false);
+              });
+          })
+          .catch((error) => {
+            openNotification("error", "Error", error.message);
+            setButtonDisabled(false);
+          });
+      })
+
+      .catch((error) => {
+        // Handle no robot found
+        openNotification(
+          "info",
+          "Info",
+          "No robots available, entering spectator mode..."
+        );
+
+        webRTC
+          .initializePeerConnection()
+          .then(() => {
+            console.log("Sending offer to arena-cam");
+            signallingServer
+              .sendOffer("arena-cam", webRTC.getOffer())
+              .then((answer) => {
+                webRTC.setAnswer(answer);
+                setButtonDisabled(false);
+
+                history.push({
+                  pathname: "/game-select/shooting",
+                  username: location.username,
+                  purpose: "waiting",
+                });
+              })
+              .catch((error) => {
+                openNotification("error", "Error", error.message);
+                setButtonDisabled(false);
+              });
+          })
+          .catch(() => {
+            openNotification("error", "Error", error.message);
+            setButtonDisabled(false);
+          });
+      });
   };
 
   return (
@@ -143,19 +218,16 @@ function GameSelect(props) {
             </div>
 
             <div className="image-container">
-              <Link
+              <div
                 onClick={() => {
-                  window.appComponent.setState({
-                    notificationMessage:
-                      "Sorry, the shooting game is not ready yet!",
-                  });
+                  goToShooting();
                 }}
               >
                 <img
                   src={require("../assets/shooting_image.PNG")}
                   alt="Shooting Selection"
                 />
-              </Link>
+              </div>
               <h3 align="center" className="image-para">
                 Shooting
               </h3>

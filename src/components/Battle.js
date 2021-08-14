@@ -23,7 +23,7 @@ function Battle(props) {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    
+
     if (!location.username) {
       window.alert("Please log in before playing a game!");
       history.push("/");
@@ -38,15 +38,15 @@ function Battle(props) {
       setWhenTimerStarted(Date.now());
       setTimeLeftToPlay(120);
       setIsTimerRunning(true);
-      
+
       // Create timeout to remove user once user has played for 30s
       setTimeout(() => {
+        // Stop keyboard controller
+        keyboardController.stop()
+
         // Disconnect from robot
         webRTC.closePeerConnection();
-        signallingServer._send({
-          type: "leave",
-          leaveType: "timer-end",
-        });
+        signallingServer.leaveGame(location.username);
 
         // Change purpose to "waiting"
         history.push({
@@ -127,11 +127,9 @@ function Battle(props) {
   useEffect(() => {
     // If user clicks back button, start leaveHandler
     window.onpopstate = () => {
+      keyboardController.stop();
       webRTC.closePeerConnection();
-      signallingServer._send({
-        type: "leave",
-        leaveType: "hard-exit",
-      });
+      signallingServer.leaveGame(location.username);
     };
   });
 

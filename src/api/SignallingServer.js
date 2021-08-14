@@ -125,6 +125,15 @@ class SignallingServer {
         return answer;
     }
 
+
+    leaveGame(userName) {
+        this._send({
+            type: "leave",
+            name: userName
+        })
+    }
+
+
     startGame() {
         this._send({
             type: "user-start-game"
