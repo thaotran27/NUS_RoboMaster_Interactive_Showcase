@@ -50,8 +50,7 @@ function Battle(props) {
 
         // Change purpose to "waiting"
         history.push({
-          pathname: "/game-select",
-          username: location.username,
+          pathname: "/"
         });
       }, 120000);
 
