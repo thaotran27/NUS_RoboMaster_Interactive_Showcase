@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 
 import Notification from "./common/Notification";
@@ -7,9 +7,9 @@ import GameSelect from "./components/GameSelect.js";
 import Battle from "./components/Battle.js";
 import Shooting from "./components/Shooting.js";
 
-import signallingServer from './api/SignallingServer';
+import signallingServer from "./api/SignallingServer";
 
-import './App.css';
+import "./App.css";
 import "./common/Animations.css";
 
 import slide1 from "./assets/robot-photo2.jpg";
@@ -18,119 +18,64 @@ import slide3 from "./assets/arena-2018.jpg";
 import slide4 from "./assets/robot-engineer.jpg";
 import slide5 from "./assets/robot-photo3.jpg";
 
-
 function App() {
+  const bgImageList = [slide1, slide2, slide3, slide4, slide5];
+  window.appComponent = this;
 
-    const bgImageList = [slide1, slide2, slide3, slide4, slide5];
-    window.appComponent = this;
+  const [isChrome, setIsChrome] = useState(false);
+  const [isEdge, setIsEdge] = useState(false);
 
-    useEffect(() => {
-        console.log("started");
-        signallingServer.initialize("localhost", 49621); // Comment this if running on AWS
-        // signallingServer.initialize("18.142.123.26", 49621); // Uncomment this if running on AWS
-    }, []);
+  useEffect(() => {
+    // Chrome 1 - 71
+    setIsChrome(window.navigator.userAgent.indexOf("Chrome") > -1);
+    setIsEdge(window.navigator.userAgent.indexOf("Edge") > -1);
+    console.log("started");
+    // signallingServer.initialize("localhost", 49621); // Comment this if running on AWS
+    signallingServer.initialize("18.142.123.26", 49621); // Uncomment this if running on AWS
+  }, []);
 
+  if (isChrome || isEdge) {
     return (
-        <div className="main">
-
-            <div className="nav-bar init-top">
-                <img src={require("./assets/luminus_logo2.png")} className="luminus-logo" alt="team luminus logo" />
-                <div className="title">
-                    <h1 align="center">NUS RoboMaster Interactive Showcase</h1>
-                </div>
-                <img src={require("./assets/nus_engineering_logo.png")} className="nus-engin-logo" alt="nus engineering logo" />
-
-            </div>
-
-            <div id="slides" className="slides">
-                <img src={bgImageList[0]} alt="background robot"></img>
-            </div>
-
-            <Switch>
-                <Route path="/" exact component={() => (<Home />)} />
-                <Route path="/game-select/" exact component={() => (<GameSelect />)} />
-                <Route path="/game-select/battle" exact component={() => (<Battle placeholder={""} />)} />
-                <Route path="/game-select/shooting" exact component={() => (<Shooting placeholder={""} />)} />
-            </Switch>
-
+      <div className="main">
+        <div className="nav-bar init-top">
+          <img
+            src={require("./assets/luminus_logo2.png")}
+            className="luminus-logo"
+            alt="team luminus logo"
+          />
+          <div className="title">
+            <h1 align="center">NUS RoboMaster Interactive Showcase</h1>
+          </div>
+          <img
+            src={require("./assets/nus_engineering_logo.png")}
+            className="nus-engin-logo"
+            alt="nus engineering logo"
+          />
         </div>
+
+        <div id="slides" className="slides">
+          <img src={bgImageList[0]} alt="background robot"></img>
+        </div>
+
+        <Switch>
+          <Route path="/" exact component={() => <Home />} />
+          <Route path="/game-select/" exact component={() => <GameSelect />} />
+          <Route
+            path="/game-select/battle"
+            exact
+            component={() => <Battle placeholder={""} />}
+          />
+          <Route
+            path="/game-select/shooting"
+            exact
+            component={() => <Shooting placeholder={""} />}
+          />
+        </Switch>
+      </div>
     );
+  } else {
+    return <div>Please use Chrome!</div>;
+  }
 }
-
-
-
-// requestOfferHandler(parsedMessage) {
-//     window.rtcPeerConnection.ondatachannel = function (event) {
-//         event.channel.onerror = function (e) {
-//             console.log("Data channel error: ", e);
-//         };
-//         event.channel.onmessage = function (e) {
-//             console.log("Data received: ", e.data);
-//         }
-//     };
-
-// // This will re-render the ENTIRE website for all users if it is called. 
-// // For a start, I do not want to re-render while the user is in a game, they couldn't care less about the queue anyways.
-// updateQueueHandler(parsedMessage) {
-//     //if (parsedMessage.instruction === "normal-update") {
-//     if (window.rtcPeerConnection != null) {
-//         // rtcPeerConnection exists, however we want to check if it is in a connected state.
-//         if (window.rtcPeerConnection.connectionState === "connected") {
-//             return; // We do not perform an update.
-//         }
-//     } else {
-//         // Continue with update if there is no window.rtcPeerConnection. This just means user is in queue 
-//     }
-//     //}
-
-//     if (parsedMessage.game === "battle" && this.props.location.pathname === "/game-select/battle") {
-//         if (!this.state.userBattleQueue.includes(window.username)) { // Indicates user is entering queue for the first time
-//             window.placeInQueue = parsedMessage.updatedQueue.indexOf(window.username) + 1;
-//             var waitTime = window.placeInQueue * turnTime;
-//             waitTimerTick(waitTime, parsedMessage.game);
-//         } else {
-//             var newPlaceInQueue = parsedMessage.updatedQueue.indexOf(window.username) + 1;
-//             if (newPlaceInQueue < window.placeInQueue) {
-//                 if (waitTimer != null) {
-//                     clearTimeout(waitTimer);
-//                 }
-//                 window.placeInQueue = newPlaceInQueue;
-//                 waitTime = newPlaceInQueue * turnTime;
-//                 waitTimerTick(waitTime, parsedMessage.game);
-//             }
-//         }
-
-//     } else if (parsedMessage.game === "shooting" && this.props.location.pathname === "/game-select/shooting") {
-//         if (!this.state.userShootingQueue.includes(window.username)) { // Indicates user is entering queue for the first time
-//             window.placeInQueue = parsedMessage.updatedQueue.indexOf(window.username) + 1;
-//             var waitTime = window.placeInQueue * turnTime;
-//             waitTimerTick(waitTime, parsedMessage.game);
-//         } else {
-//             var newPlaceInQueue = parsedMessage.updatedQueue.indexOf(window.username) + 1;
-//             if (newPlaceInQueue < window.placeInQueue) {
-//                 if (waitTimer != null) {
-//                     clearTimeout(waitTimer);
-//                 }
-//                 window.placeInQueue = newPlaceInQueue;
-//                 waitTime = newPlaceInQueue * turnTime;
-//                 waitTimerTick(waitTime, parsedMessage.game);
-//             }
-//         }
-
-//     } else { // User is on another page. In this case we do not update the estimated wait time.
-//         // nop
-//     }
-
-//     if (parsedMessage.game === "battle") {
-//         console.log("Received battle queue: " + parsedMessage.updatedQueue);
-//         this.setState({ userBattleQueue: parsedMessage.updatedQueue });
-//     } else if (parsedMessage.game === "shooting") {
-//         console.log("Received shooting queue: " + parsedMessage.updatedQueue);
-//         this.setState({ userShootingQueue: parsedMessage.updatedQueue });
-//     } else {
-//         console.error("Queue received for unknown game: " + parsedMessage.game);
-//     }
-// }
-// }
 
 export default withRouter(App);
