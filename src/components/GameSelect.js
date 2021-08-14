@@ -218,7 +218,7 @@ function GameSelect(props) {
             </div>
 
             <div className="image-container">
-              <Link
+              <div
                 onClick={() => {
                   goToShooting();
                 }}
@@ -227,7 +227,7 @@ function GameSelect(props) {
                   src={require("../assets/shooting_image.PNG")}
                   alt="Shooting Selection"
                 />
-              </Link>
+              </div>
               <h3 align="center" className="image-para">
                 Shooting
               </h3>
