@@ -34,9 +34,9 @@ function Battle(props) {
       });
       keyboardController.start();
 
-      // Start UI Timer at 30s
+      // Start UI Timer at 120s
       setWhenTimerStarted(Date.now());
-      setTimeLeftToPlay(30);
+      setTimeLeftToPlay(120);
       setIsTimerRunning(true);
       
       // Create timeout to remove user once user has played for 30s
@@ -53,7 +53,7 @@ function Battle(props) {
           pathname: "/game-select",
           username: location.username,
         });
-      }, 30000);
+      }, 120000);
 
     } else if (location.purpose === "waiting") {
       // Check if user has received an offer from a free robot
