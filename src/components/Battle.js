@@ -34,23 +34,25 @@ function Battle(props) {
       });
       keyboardController.start();
 
-      // Start UI Timer at 30s
+      // Start UI Timer at 120s
       setWhenTimerStarted(Date.now());
-      setTimeLeftToPlay(30);
+      setTimeLeftToPlay(120);
       setIsTimerRunning(true);
 
       // Create timeout to remove user once user has played for 30s
       setTimeout(() => {
+        // Stop keyboard controller
+        keyboardController.stop()
+
         // Disconnect from robot
         webRTC.closePeerConnection();
         signallingServer.leaveGame(location.username);
 
         // Change purpose to "waiting"
         history.push({
-          pathname: "/game-select",
-          username: location.username,
+          pathname: "/"
         });
-      }, 30000);
+      }, 120000);
 
     } else if (location.purpose === "waiting") {
       // Check if user has received an offer from a free robot
