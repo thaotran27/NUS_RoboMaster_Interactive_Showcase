@@ -17,9 +17,8 @@ class KeyboardController {
         };
     }
 
-
     start() {
-        document.onkeydown = function (event) {
+        const keyDownFunc = (event) => {
             // Filter out all other keys
             if (!this.keys.has(event.key)) {
                 return true;
@@ -27,28 +26,29 @@ class KeyboardController {
 
             // Execute if our key is being pressed for the first time.
             if (!(event.key in this.keyTimers)) {
-                this.keyTimers[event.key] = null;
                 this.keysPressed[event.key] = true;
-                this.keyPressCallback();
+                this.keyPressCallback(this.keysPressed);
 
-                this.keyTimers[event.key] = setInterval(function () {
+                this.keyTimers[event.key] = setInterval(() => {
                     this.keysPressed[event.key] = true;
-                    this.keyPressCallback();
+                    this.keyPressCallback(this.keysPressed);
                 }, this.repeatTime);
             }
         }
 
-        document.onkeyup = function (event) {
+        const keyUpFunc = (event) => {
             // Execute if our key was previously being repeated
+
             if (event.key in this.keyTimers) {
-                if (this.keyTimers[event.key] !== null) {
-                    clearInterval(this.keyTimers[event.key]);
-                }
+                clearInterval(this.keyTimers[event.key]);
                 delete this.keyTimers[event.key];
-                delete this[event.key];
-                this.keyPressCallback();
+                delete this.keysPressed[event.key];
+                this.keyPressCallback(this.keysPressed);
             }
         }
+
+        document.onkeydown = keyDownFunc;
+        document.onkeyup = keyUpFunc;
     }
 
 

@@ -1,71 +1,126 @@
 .selection-container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-    color: lightgray;
-    overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  color: lightgray;
+  overflow: hidden;
 }
 
 .selection-box {
-    background-color: rgba(0, 0, 0, 0.95);
-    box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);    
-    z-index: inherit;
-    display: flex;
-    flex-direction: column;
-    color: lightgray;
-    height: auto;
-    width: 50vw;
-    padding-left: 1%;
-    padding-right: 1%;
+  background-color: rgba(0, 0, 0, 0.95);
+  box-shadow: 0.4vh 0.4vh 0.5vh 0vh rgba(0, 0, 0, 0.5);
+  z-index: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: lightgray;
+  height: auto;
+  width: 50vw;
+  padding-left: 1%;
+  padding-right: 1%;
+  padding-top: 1%;
 }
 
 .tile-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .image-container {
-    z-index: inherit;
-    width: 100%;
-    height: 100%;
-    margin: 2%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    animation: hover-contract 0.25s ease-out 0s 1 forwards;
+  z-index: inherit;
+  width: 100%;
+  height: 100%;
+  margin: 2%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: hover-contract 0.25s ease-out 0s 1 forwards;
 }
 
 .image-container img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 5px;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 5px;
 }
 
 .image-container:hover {
-    animation: hover-expand 0.25s ease-out 0s 1 forwards;
+  animation: hover-expand 0.25s ease-out 0s 1 forwards;
 }
+
+.loader {
+  margin: 2em;
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #000000; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+div.selection-box span {
+  animation-name: load;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.loaderdotone {
+  animation-delay: 0.3s;
+}
+
+.loaderdottwo {
+  animation-delay: 0.6s;
+}
+
+.loaderdotthree {
+  animation-delay: 1.0s;
+}
+
 
 .image-para {
     color: lightgray;
 }
 
 @keyframes hover-expand {
-    from {
-        transform: scale(1.0);
-    } to {
-        transform: scale(1.02);
-    }
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.02);
+  }
 }
 
 @keyframes hover-contract {
-    from {
-        transform: scale(1.02);
-    } to {
-        transform: scale(1);
-    }
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load {
+  0% {
+    opacity: 0%;
+  }
+  50% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 0%;
+  }
 }
